@@ -13,7 +13,7 @@ const BackgroundVideo = () => {
                 autoPlay
                 muted
                 loop
-                playbackRate={0.5}
+
             />
             <div className="absolute top-0 left-0 w-full h-full bg-black opacity-40"></div>
             <div className="relative z-10 w-full h-full  bg-opacity-75">

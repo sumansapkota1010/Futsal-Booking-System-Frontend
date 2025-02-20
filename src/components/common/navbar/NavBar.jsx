@@ -66,7 +66,7 @@ const NavBar = () => {
                             </button>
                         </div>
 
-                        <div className="  flex flex-col space-y-2  px-6 py-15 md:hidden">
+                        <div className="  flex flex-col space-y-2  px-6 py-15  ">
                             <NavLink href="#">Home</NavLink>
                             <NavLink href="#">Our Ground</NavLink>
                             <NavLink href="#">Contact</NavLink>
@@ -76,8 +76,15 @@ const NavBar = () => {
                         </div>
 
                     </div>
-
                 )}
+                <div className="hidden md:flex space-x-6">
+                    <NavLink href="#">Home</NavLink>
+                    <NavLink href="#">Our Ground</NavLink>
+                    <NavLink href="#">Contact</NavLink>
+                    <NavLink href="#">Register</NavLink>
+                    <NavLink href="#">Login</NavLink>
+                    <NavLink href="#">Admin Dashboard</NavLink>
+                </div>
 
             </div>
         </nav>
