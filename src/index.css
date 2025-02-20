@@ -1,0 +1,34 @@
+/* src/styles.css */
+@import "tailwindcss";
+
+:root {
+  --font-outfit: "Outfit", sans-serif;
+}
+
+body {
+  font-family: var(--font-outfit);
+}
+
+@layer components {
+  .container {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--max-width-sm);
+
+    @media (min-width: 768px) {
+      max-width: var(--max-width-md);
+    }
+
+    @media (min-width: 992px) {
+      max-width: var(--max-width-lg);
+    }
+
+    @media (min-width: 1200px) {
+      max-width: var(--max-width-xl);
+    }
+
+    @media (min-width: 1400px) {
+      max-width: var(--max-width-2xl);
+    }
+  }
+}
