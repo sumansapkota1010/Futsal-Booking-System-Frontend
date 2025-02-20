@@ -1,8 +1,12 @@
 import React from 'react'
+import Grounds from '../components/main/grounds/Grounds'
 
 const HomePage = () => {
     return (
-        <div> This is HomePage</div>
+        <>
+
+            <Grounds />
+        </>
     )
 }
 
