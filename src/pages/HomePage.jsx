@@ -4,8 +4,9 @@ import Grounds from '../components/main/grounds/Grounds'
 const HomePage = () => {
     return (
         <>
-
-            <Grounds />
+            <section id="our-grounds">
+                <Grounds />
+            </section>
         </>
     )
 }
