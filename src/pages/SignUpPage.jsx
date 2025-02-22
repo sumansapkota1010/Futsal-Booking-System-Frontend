@@ -1,9 +1,9 @@
 import React from 'react';
-import player from '../assets/court/player.jpg';
+import photo from '../assets/court/photo.png';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import { signUpSchema } from '../schemas';
-
+import { useNavigate, Link } from 'react-router-dom';
 
 const initialValues = {
     name: "",
@@ -12,9 +12,8 @@ const initialValues = {
     phoneNumber: ""
 };
 
-
-
 const SignUpPage = () => {
+    const navigate = useNavigate();
     const { values, errors, touched, handleBlur, handleChange, handleSubmit, isSubmitting } = useFormik({
         initialValues: initialValues,
         validationSchema: signUpSchema,
@@ -23,10 +22,9 @@ const SignUpPage = () => {
             try {
                 const response = await axios.post("http://localhost:3000/api/register", values);
                 console.log("Response from backend:", response.data);
-                console.log("Response")
 
                 if (response.status === 200) {
-                    alert("Registration successful!");
+                    navigate('/login');
                     resetForm();
                 } else {
                     alert("Registration failed. Please try again.");
@@ -46,8 +44,9 @@ const SignUpPage = () => {
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-100 p-5">
-            <div className="flex w-full max-w-5xl bg-white shadow-lg rounded-lg overflow-hidden">
-                <div className="w-1/2 p-10">
+            <div className="flex flex-col md:flex-row w-full max-w-5xl bg-white shadow-lg rounded-lg overflow-hidden">
+
+                <div className="w-full md:w-1/2 p-6 md:p-10">
                     <h2 className="text-2xl font-bold text-gray-800">Register</h2>
                     <p className="text-gray-500 mb-5">Create your account</p>
                     <form onSubmit={handleSubmit} className="space-y-4">
@@ -55,23 +54,22 @@ const SignUpPage = () => {
                             <span className="absolute left-3 top-3 text-gray-400">👤</span>
                             <input
                                 type="text"
-                                name='name'
+                                name="name"
                                 value={values.name}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
                                 placeholder="Name"
                                 className="w-full pl-10 p-3 border rounded-md focus:ring-2 focus:ring-red-400"
                             />
-                            {
-                                errors.name && touched.name &&
-                                <p className='form-error text-red-500'>{errors.name}</p>
-                            }
+                            {errors.name && touched.name && (
+                                <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                            )}
                         </div>
                         <div className="relative">
                             <span className="absolute left-3 top-3 text-gray-400">📧</span>
                             <input
                                 type="email"
-                                name='email'
+                                name="email"
                                 value={values.email}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
@@ -86,7 +84,7 @@ const SignUpPage = () => {
                             <span className="absolute left-3 top-3 text-gray-400">🔒</span>
                             <input
                                 type="password"
-                                name='password'
+                                name="password"
                                 value={values.password}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
@@ -101,7 +99,7 @@ const SignUpPage = () => {
                             <span className="absolute left-3 top-3 text-gray-400">📞</span>
                             <input
                                 type="text"
-                                name='phoneNumber'
+                                name="phoneNumber"
                                 value={values.phoneNumber}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
@@ -122,15 +120,16 @@ const SignUpPage = () => {
                     </form>
 
                     <p className="text-center text-gray-500 mt-4">
-                        Already registered? <a href="#" className="text-red-500">Login</a>
+                        Already registered? <Link to="/login" className="text-red-500">Login</Link>
                     </p>
                 </div>
 
-                <div className="w-1/2 flex items-center justify-center bg-gray-50">
+
+                <div className="w-full md:w-1/2 flex items-center justify-center bg-gray-50 p-6 md:p-0">
                     <img
-                        src={player}
+                        src={photo}
                         alt="Football Player"
-                        className="w-full h-full object-cover drop-shadow-lg md:w-[509px] md:h-[649px]"
+                        className="w-full h-auto object-cover drop-shadow-lg md:w-[509px] md:h-[649px]"
                     />
                 </div>
             </div>

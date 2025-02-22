@@ -3,6 +3,8 @@ import Layout from "./components/common/Layout"
 import HomePage from "./pages/HomePage"
 import SignUpPage from "./pages/SignUpPage"
 
+import LoginPage from "./pages/LoginPage"
+
 
 
 
@@ -16,6 +18,10 @@ function App() {
     {
       path: "/register",
       element: <SignUpPage />
+    },
+    {
+      path: "/login",
+      element: <LoginPage />
     }
   ])
 

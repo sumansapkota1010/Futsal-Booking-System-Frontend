@@ -7,3 +7,8 @@ export const signUpSchema = Yup.object({
     password: Yup.string().min(8).required("Please enter your password"),
     phoneNumber: Yup.number().min(10).required("Please enter your phone number")
 })
+
+export const loginSchema = Yup.object({
+    email: Yup.string().email('Invalid email address').required("Please enter your email"),
+    password: Yup.string().min(8).required("Please enter your password")
+})

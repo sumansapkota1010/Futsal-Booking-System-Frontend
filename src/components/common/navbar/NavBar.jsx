@@ -1,25 +1,46 @@
 import React, { useState } from 'react';
-import { Link } from 'react-scroll';
+import { Link as ScrollLink } from 'react-scroll';
+import { Link, useNavigate } from 'react-router-dom';
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const navigate = useNavigate()
 
     const NavLinkClasses =
         'text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] cursor-pointer';
-    const NavLink = ({ to, children }) => (
-        <Link
-            to={to}
-            smooth={true}
-            duration={500}
-            className={NavLinkClasses}
-        >
-            {children}
-        </Link>
+    const NavLink = ({ to, children, isRouterLink, onClick }) => (
+        isRouterLink ? (
+            <Link
+                to={to}
+                smooth={true}
+                duration={500}
+                className={NavLinkClasses}
+                onClick={onClick}
+            >
+                {children}
+            </Link>
+        ) :
+            <ScrollLink
+                to={to}
+                smooth={true}
+                duration={500}
+                className={NavLinkClasses}
+                onClick={onClick}
+            >
+                {children}
+            </ScrollLink>
+
     );
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token")
+        navigate("/login")
+        setIsOpen(false)
+    }
 
     return (
         <nav className="bg-[#E5E5E5] p-4 text-black">
@@ -82,8 +103,13 @@ const NavBar = () => {
                             <NavLink to="our-grounds">Our Ground</NavLink>
 
                             <NavLink to="contact">Contact</NavLink>
-                            <NavLink to="register">Register</NavLink>
-                            <NavLink to="login">Login</NavLink>
+                            {
+                                !localStorage.getItem("token") ? <div><NavLink to="register">Register</NavLink>
+                                    <NavLink to="login">Login</NavLink> </div>
+                                    : <NavLink onClick={handleLogout} >Logout</NavLink>
+                            }
+
+
                             <NavLink to="admin-dashboard">Admin Dashboard</NavLink>
                         </div>
                     </div>
@@ -93,8 +119,12 @@ const NavBar = () => {
                     <NavLink to="home">Home</NavLink>
                     <NavLink to="our-grounds">Our Ground</NavLink>
                     <NavLink to="contact">Contact</NavLink>
-                    <NavLink to="register">Register</NavLink>
-                    <NavLink to="login">Login</NavLink>
+
+                    {
+                        !localStorage.getItem("token") ? <div><NavLink to="register">Register</NavLink>
+                            <NavLink to="login">Login</NavLink> </div>
+                            : <NavLink onClick={handleLogout} >Logout</NavLink>
+                    }
                     <NavLink to="admin-dashboard">Admin Dashboard</NavLink>
                 </div>
             </div>
