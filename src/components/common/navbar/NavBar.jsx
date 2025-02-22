@@ -104,8 +104,11 @@ const NavBar = () => {
 
                             <NavLink to="contact">Contact</NavLink>
                             {
-                                !localStorage.getItem("token") ? <div><NavLink to="register">Register</NavLink>
-                                    <NavLink to="login">Login</NavLink> </div>
+                                !localStorage.getItem("token") ?
+                                    <div className='lex space-x-4'>
+                                        <NavLink to="register">Register</NavLink>
+                                        <NavLink to="login">Login</NavLink>
+                                    </div>
                                     : <NavLink onClick={handleLogout} >Logout</NavLink>
                             }
 
@@ -121,8 +124,10 @@ const NavBar = () => {
                     <NavLink to="contact">Contact</NavLink>
 
                     {
-                        !localStorage.getItem("token") ? <div><NavLink to="register">Register</NavLink>
-                            <NavLink to="login">Login</NavLink> </div>
+                        !localStorage.getItem("token") ?
+                            <div className='flex space-x-4'>
+                                <NavLink to="register">Register</NavLink>
+                                <NavLink to="login">Login</NavLink> </div>
                             : <NavLink onClick={handleLogout} >Logout</NavLink>
                     }
                     <NavLink to="admin-dashboard">Admin Dashboard</NavLink>
