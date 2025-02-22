@@ -10,9 +10,9 @@ const Footer = () => {
 
 
                     <div>
-                        <h2 className="text-xl font-bold text-white mb-4">About FutsalBook</h2>
+                        <h2 className="text-xl font-bold text-white mb-4">Anfield Futsal</h2>
                         <p className="text-sm">
-                            Your go-to platform for booking futsal grounds effortlessly. Play the game you love without any hassle.
+                            Premium futsal facilities for everyone
                         </p>
                     </div>
 
@@ -21,10 +21,10 @@ const Footer = () => {
                         <h2 className="text-xl font-bold text-white mb-4">Contact Us</h2>
                         <ul className="space-y-3">
                             <li className="flex items-center gap-3">
-                                <FaPhoneAlt className="text-yellow-400" /> +977-9876543210
+                                <FaPhoneAlt className="text-yellow-400" /> +977-9840300084
                             </li>
                             <li className="flex items-center gap-3">
-                                <FaEnvelope className="text-yellow-400" /> contact@futsalbook.com
+                                <FaEnvelope className="text-yellow-400" /> sumansapkota777@gmail.com
                             </li>
                             <li className="flex items-center gap-3">
                                 <FaMapMarkerAlt className="text-yellow-400" /> Kathmandu, Nepal
