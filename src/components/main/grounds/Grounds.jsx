@@ -1,10 +1,14 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Grounds = () => {
     const [grounds, setGrounds] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
+    const navigate = useNavigate()
+
+
 
     useEffect(() => {
 
@@ -24,6 +28,10 @@ const Grounds = () => {
         fetchGrounds()
 
     }, [])
+
+    const handleBookNow = () => {
+        navigate("/bookings")
+    }
 
 
     return (
@@ -79,7 +87,7 @@ const Grounds = () => {
                             </div>
 
                             <div className="p-4 bg-[#31942C] text-white text-center">
-                                <button className="w-full py-2 rounded-md font-semibold  transition">
+                                <button onClick={handleBookNow} className="w-full py-2 rounded-md font-semibold  transition">
                                     Book Now
                                 </button>
                             </div>

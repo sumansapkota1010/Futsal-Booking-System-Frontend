@@ -106,8 +106,8 @@ const NavBar = () => {
                             {
                                 !localStorage.getItem("token") ?
                                     <div className='lex space-x-4'>
-                                        <NavLink to="register">Register</NavLink>
-                                        <NavLink to="login">Login</NavLink>
+                                        <NavLink to="register" isRouterLink>Register</NavLink>
+                                        <NavLink to="login" isRouterLink >Login</NavLink>
                                     </div>
                                     : <NavLink onClick={handleLogout} >Logout</NavLink>
                             }
@@ -126,8 +126,8 @@ const NavBar = () => {
                     {
                         !localStorage.getItem("token") ?
                             <div className='flex space-x-4'>
-                                <NavLink to="register">Register</NavLink>
-                                <NavLink to="login">Login</NavLink> </div>
+                                <NavLink to="register" isRouterLink>Register</NavLink>
+                                <NavLink to="login" isRouterLink>Login</NavLink> </div>
                             : <NavLink onClick={handleLogout} >Logout</NavLink>
                     }
                     <NavLink to="admin-dashboard">Admin Dashboard</NavLink>
