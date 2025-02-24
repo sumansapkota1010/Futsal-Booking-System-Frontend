@@ -1,46 +1,63 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link as ScrollLink } from 'react-scroll';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProfile } from '../../../redux/slice/profile';
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const navigate = useNavigate()
+    const dispatch = useDispatch();
+    const { profile, isLoading, error } = useSelector((state) => state.profile);
+    const navigate = useNavigate();
 
     const NavLinkClasses =
         'text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] cursor-pointer';
-    const NavLink = ({ to, children, isRouterLink, onClick }) => (
-        isRouterLink ? (
-            <Link
-                to={to}
-                smooth={true}
-                duration={500}
-                className={NavLinkClasses}
-                onClick={onClick}
-            >
-                {children}
-            </Link>
-        ) :
-            <ScrollLink
-                to={to}
-                smooth={true}
-                duration={500}
-                className={NavLinkClasses}
-                onClick={onClick}
-            >
-                {children}
-            </ScrollLink>
 
-    );
+
+    useEffect(() => {
+        dispatch(fetchProfile());
+    }, [dispatch]);
+
+
+
+
+    const NavLink = ({ to, children, isRouterLink, onClick }) => {
+        if (isRouterLink) {
+            return (
+                <Link
+                    to={to}
+                    className={NavLinkClasses}
+                    onClick={onClick}
+                >
+                    {children}
+                </Link>
+            );
+        } else {
+            return (
+                <ScrollLink
+                    to={to}
+                    smooth={true}
+                    duration={500}
+                    className={NavLinkClasses}
+                    onClick={onClick}
+                >
+                    {children}
+                </ScrollLink>
+            );
+        }
+    };
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("token")
-        navigate("/login")
-        setIsOpen(false)
-    }
+        localStorage.removeItem("token");
+        navigate("/login");
+        setIsOpen(false);
+    };
+
+    const profileData = profile.userName
 
     return (
         <nav className="bg-[#E5E5E5] p-4 text-black">
@@ -101,19 +118,16 @@ const NavBar = () => {
                         <div className="flex flex-col space-y-2 px-6 py-15">
                             <NavLink to="home">Home</NavLink>
                             <NavLink to="our-grounds">Our Ground</NavLink>
-
                             <NavLink to="contact">Contact</NavLink>
-                            {
-                                !localStorage.getItem("token") ?
-                                    <div className='lex space-x-4'>
-                                        <NavLink to="register" isRouterLink>Register</NavLink>
-                                        <NavLink to="login" isRouterLink >Login</NavLink>
-                                    </div>
-                                    : <NavLink onClick={handleLogout} >Logout</NavLink>
-                            }
-
-
-                            <NavLink to="admin-dashboard">Admin Dashboard</NavLink>
+                            {!localStorage.getItem("token") ? (
+                                <div className='flex space-x-4'>
+                                    <NavLink to="/register" isRouterLink>Register</NavLink>
+                                    <NavLink to="/login" isRouterLink>Login</NavLink>
+                                </div>
+                            ) : (
+                                <NavLink to="#" onClick={handleLogout}>Logout</NavLink>
+                            )}
+                            <NavLink to="/admin-dashboard" isRouterLink>Admin Dashboard</NavLink>
                         </div>
                     </div>
                 )}
@@ -122,15 +136,19 @@ const NavBar = () => {
                     <NavLink to="home">Home</NavLink>
                     <NavLink to="our-grounds">Our Ground</NavLink>
                     <NavLink to="contact">Contact</NavLink>
+                    {!localStorage.getItem("token") ? (
+                        <div className='flex space-x-4'>
+                            <NavLink to="/register" isRouterLink>Register</NavLink>
+                            <NavLink to="/login" isRouterLink>Login</NavLink>
+                        </div>
+                    ) : (
+                        <>
+                            <NavLink to="#" onClick={handleLogout}>Logout</NavLink>
+                            <p className='text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] '>  Hello {profileData}</p>
+                        </>
+                    )}
+                    <NavLink to="/admin-dashboard" isRouterLink>Admin Dashboard</NavLink>
 
-                    {
-                        !localStorage.getItem("token") ?
-                            <div className='flex space-x-4'>
-                                <NavLink to="register" isRouterLink>Register</NavLink>
-                                <NavLink to="login" isRouterLink>Login</NavLink> </div>
-                            : <NavLink onClick={handleLogout} >Logout</NavLink>
-                    }
-                    <NavLink to="admin-dashboard">Admin Dashboard</NavLink>
                 </div>
             </div>
         </nav>

@@ -1,0 +1,44 @@
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchProfile } from '../redux/slice/profile'
+import accessDenied from '../assets/court/access-denied-stamp-png.png'
+
+const ProtectedRoute = ({ children }) => {
+
+    const dispatch = useDispatch()
+    const { profile, isLoading, error } = useSelector((state) => state.profile)
+    console.log("🚀 ~ ProtectedRoute ~ profile:", profile.role)
+
+
+
+    useEffect(() => {
+
+        dispatch(fetchProfile())
+
+
+    }, [dispatch])
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
+    if (error) {
+        return <div>Error: {error}</div>
+    }
+
+    const isAdmin = profile?.role === "admin"
+    console.log(isAdmin)
+    return (
+        isAdmin ? children : (
+            <div className="flex items-center justify-center h-screen overflow-hidden">
+                <div className="h-full w-full">
+                    <img
+                        className="h-full w-full object-cover animate-fadeIn"
+                        src={accessDenied}
+                        alt="Access Denied" />
+                </div>
+            </div>
+        )
+    )
+}
+
+export default ProtectedRoute

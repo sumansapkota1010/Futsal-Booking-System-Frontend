@@ -7,6 +7,8 @@ import LoginPage from "./pages/LoginPage"
 import BookingPage from "./pages/Bookingpage"
 import CheckoutPage from "./pages/CheckOutPage"
 import PaymentSuccess from "./pages/PaymentSuccess"
+import ProtectedRoute from "./pages/ProtectedRoute"
+import AdminPanel from "./pages/Admin/AdminDashboard/AdminPanel"
 
 
 
@@ -37,7 +39,15 @@ function App() {
     {
       path: "/payment-success",
       element: <PaymentSuccess />
-    }
+    },
+    {
+      path: "admin",
+      element: (
+        <ProtectedRoute>
+          <AdminPanel />
+        </ProtectedRoute>
+      ),
+    },
   ])
 
   return (
