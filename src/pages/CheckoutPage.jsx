@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
+import khaltiImage from '../assets/court/khalti.png'
 import axios from "axios";
 
 const Checkout = () => {
@@ -100,7 +101,7 @@ const Checkout = () => {
                             />
                             <label htmlFor="khalti" className="flex items-center">
                                 <img
-                                    src="https://khalti.com/static/images/logo.svg"
+                                    src={khaltiImage}
                                     alt="Khalti"
                                     className="w-16 mr-2"
                                 />

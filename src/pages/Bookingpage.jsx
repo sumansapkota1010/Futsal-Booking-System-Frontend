@@ -6,14 +6,15 @@ import { createBooking } from "../redux/slice/bookings";
 
 const BookingPage = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { slots, isLoading, error } = useSelector((state) => state.slots);
-    const { loading: bookingLoading, error: bookingError, bookings } = useSelector(
+    const { loading: bookingLoading, error: bookingError } = useSelector(
         (state) => state.bookings
     );
 
-
     const [selectedSlot, setSelectedSlot] = useState(null);
+    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedGround, setSelectedGround] = useState("");
 
     useEffect(() => {
         dispatch(fetchSlots());
@@ -32,14 +33,15 @@ const BookingPage = () => {
         const groundId = slot.ground._id;
 
         try {
-            const bookingResponse = await dispatch(createBooking({ ground: groundId, slot: slotId })).unwrap();
+            const bookingResponse = await dispatch(
+                createBooking({ ground: groundId, slot: slotId })
+            ).unwrap();
 
             console.log("Booking Response:", bookingResponse);
 
-            if (bookingResponse && bookingResponse.data && bookingResponse.data._id) {
+            if (bookingResponse?.data?._id) {
                 const bookingId = bookingResponse.data._id;
                 const amount = slot.price;
-
 
                 navigate(`/checkout`, {
                     state: { bookingId, amount },
@@ -50,11 +52,7 @@ const BookingPage = () => {
         } catch (error) {
             console.error("Booking failed:", error);
         }
-
     };
-
-
-
 
     if (isLoading) {
         return (
@@ -65,24 +63,76 @@ const BookingPage = () => {
     }
 
     if (error) {
-        return <div className="text-center mt-8 text-red-500 font-semibold">{error}</div>;
+        return <div className="text-center mt-8 text-red-500 font-semibold">No Slot Available</div>;
     }
+
+
+    const uniqueDates = [];
+    const uniqueGrounds = [];
+    slots.forEach((slot) => {
+        const date = new Date(slot.date).toLocaleDateString();
+        const groundName = slot.ground.name;
+
+        if (!uniqueDates.includes(date)) {
+            uniqueDates.push(date);
+        }
+        if (!uniqueGrounds.includes(groundName)) {
+            uniqueGrounds.push(groundName);
+        }
+    });
+
+    const filteredSlots = slots.filter((slot) => {
+        const slotDate = new Date(slot.date).toLocaleDateString();
+        const slotGround = slot.ground.name;
+
+        return (
+            (!selectedDate || slotDate === selectedDate) &&
+            (!selectedGround || slotGround === selectedGround)
+        );
+    });
 
     return (
         <div className="max-w-2xl mx-auto p-6">
 
             <div className="mb-4">
-                <label className="block text-gray-700 font-semibold">Date</label>
-                <input type="date" className="w-full p-2 border rounded" />
+                <label className="block text-gray-700 font-semibold">Select Date</label>
+                <select
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="w-full p-2 border rounded"
+                >
+                    <option value="">All Dates</option>
+                    {uniqueDates.map((date, index) => (
+                        <option key={index} value={date}>
+                            {date}
+                        </option>
+                    ))}
+                </select>
             </div>
 
+
+            <div className="mb-4">
+                <label className="block text-gray-700 font-semibold">Select Ground</label>
+                <select
+                    value={selectedGround}
+                    onChange={(e) => setSelectedGround(e.target.value)}
+                    className="w-full p-2 border rounded"
+                >
+                    <option value="">All Grounds</option>
+                    {uniqueGrounds.map((ground, index) => (
+                        <option key={index} value={ground}>
+                            {ground}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             <div className="p-4 bg-gray-100 rounded">
                 <h2 className="text-lg font-semibold text-gray-800 mb-3">
                     Available Time Slots
                 </h2>
                 <div className="grid grid-cols-4 gap-2">
-                    {slots.map((slot) => (
+                    {filteredSlots.map((slot) => (
                         <button
                             key={slot._id}
                             onClick={() => handleSlotClick(slot)}
@@ -107,15 +157,16 @@ const BookingPage = () => {
                     Date: {new Date(selectedSlot.date).toLocaleDateString()}
                 </div>
             )}
+
+
             <button
-                onClick={() => handleBooking(selectedSlot._id)}
-                disabled={!selectedSlot}
+                onClick={() => handleBooking(selectedSlot?._id)}
+                disabled={!selectedSlot || bookingLoading}
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3"
             >
                 {bookingLoading ? "Processing..." : "Book Now"}
             </button>
             {bookingError && <p className="text-red-500 mt-2">{bookingError}</p>}
-
         </div>
     );
 };
