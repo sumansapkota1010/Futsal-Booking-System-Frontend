@@ -20,7 +20,22 @@ const BookingPage = () => {
         dispatch(fetchSlots());
     }, [dispatch]);
 
-    const handleSlotClick = (slot) => {
+    useEffect(() => {
+        const handleClickOutside = () => {
+            setSelectedSlot(null);
+        };
+
+
+        document.addEventListener("click", handleClickOutside);
+
+
+        return () => {
+            document.removeEventListener("click", handleClickOutside);
+        };
+    }, []);
+
+    const handleSlotClick = (slot, e) => {
+        e.stopPropagation()
         if (!slot.isBooked) {
             setSelectedSlot(slot);
         }
@@ -135,7 +150,7 @@ const BookingPage = () => {
                     {filteredSlots.map((slot) => (
                         <button
                             key={slot._id}
-                            onClick={() => handleSlotClick(slot)}
+                            onClick={(e) => handleSlotClick(slot, e)}
                             className={`p-2 w-full text-center rounded-md 
                                 ${slot.isBooked ? "bg-red-300 text-red-700 cursor-not-allowed" : "bg-green-300 hover:bg-green-400"} 
                                 ${selectedSlot?._id === slot._id ? "border-2 border-blue-600" : ""}`}
