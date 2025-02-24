@@ -1,22 +1,29 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import { fetchSlots } from "../redux/slice/slots";
+import { useNavigate } from "react-router-dom";
 import { createBooking } from "../redux/slice/bookings";
 
 const BookingPage = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-
-    // Fetch slots and booking state from Redux
-    const { slots, loading, error } = useSelector((state) => state.slots);
+    const navigate = useNavigate()
+    const { slots, isLoading, error } = useSelector((state) => state.slots);
     const { loading: bookingLoading, error: bookingError, bookings } = useSelector(
         (state) => state.bookings
     );
 
+
+    const [selectedSlot, setSelectedSlot] = useState(null);
+
     useEffect(() => {
         dispatch(fetchSlots());
     }, [dispatch]);
+
+    const handleSlotClick = (slot) => {
+        if (!slot.isBooked) {
+            setSelectedSlot(slot);
+        }
+    };
 
     const handleBooking = async (slotId) => {
         const slot = slots.find((slot) => slot._id === slotId);
@@ -27,14 +34,13 @@ const BookingPage = () => {
         try {
             const bookingResponse = await dispatch(createBooking({ ground: groundId, slot: slotId })).unwrap();
 
-            console.log("Booking Response:", bookingResponse); // Debugging log
+            console.log("Booking Response:", bookingResponse);
 
-            // Ensure the booking response contains the correct structure
             if (bookingResponse && bookingResponse.data && bookingResponse.data._id) {
                 const bookingId = bookingResponse.data._id;
-                const amount = slot.price;  // Use the slot's price as the amount
+                const amount = slot.price;
 
-                // Navigate to checkout page with bookingId and amount
+
                 navigate(`/checkout`, {
                     state: { bookingId, amount },
                 });
@@ -44,33 +50,72 @@ const BookingPage = () => {
         } catch (error) {
             console.error("Booking failed:", error);
         }
+
     };
 
-    if (loading) return <div className="text-center mt-8">Loading...</div>;
-    if (error) return <div className="text-center mt-8 text-red-500">{error}</div>;
+
+
+
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return <div className="text-center mt-8 text-red-500 font-semibold">{error}</div>;
+    }
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold text-center my-4">Available Slots</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {slots.map((slot) => (
-                    <div key={slot._id} className="max-w-sm rounded overflow-hidden shadow-lg p-4">
-                        <div className="font-bold text-xl mb-2">{slot.ground.name}</div>
-                        <p className="text-gray-700 text-base">
-                            {new Date(slot.date).toLocaleDateString()} - {slot.startTime} to {slot.endTime}
-                        </p>
-                        <p className="text-gray-900 text-xl">NPR {slot.price}</p>
-                        <button
-                            onClick={() => handleBooking(slot._id)}
-                            disabled={bookingLoading}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3"
-                        >
-                            {bookingLoading ? "Processing..." : "Book Now"}
-                        </button>
-                        {bookingError && <p className="text-red-500 mt-2">{bookingError}</p>}
-                    </div>
-                ))}
+        <div className="max-w-2xl mx-auto p-6">
+
+            <div className="mb-4">
+                <label className="block text-gray-700 font-semibold">Date</label>
+                <input type="date" className="w-full p-2 border rounded" />
             </div>
+
+
+            <div className="p-4 bg-gray-100 rounded">
+                <h2 className="text-lg font-semibold text-gray-800 mb-3">
+                    Available Time Slots
+                </h2>
+                <div className="grid grid-cols-4 gap-2">
+                    {slots.map((slot) => (
+                        <button
+                            key={slot._id}
+                            onClick={() => handleSlotClick(slot)}
+                            className={`p-2 w-full text-center rounded-md 
+                                ${slot.isBooked ? "bg-red-300 text-red-700 cursor-not-allowed" : "bg-green-300 hover:bg-green-400"} 
+                                ${selectedSlot?._id === slot._id ? "border-2 border-blue-600" : ""}`}
+                            disabled={slot.isBooked}
+                        >
+                            {slot.startTime} - {slot.endTime}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+
+            {selectedSlot && (
+                <div className="mt-4 p-2 bg-blue-100 rounded text-blue-700 font-medium">
+                    Selected Slot: {selectedSlot.startTime} - {selectedSlot.endTime}
+                    <br />
+                    Ground: {selectedSlot.ground?.name}
+                    <br />
+                    Date: {new Date(selectedSlot.date).toLocaleDateString()}
+                </div>
+            )}
+            <button
+                onClick={() => handleBooking(selectedSlot._id)}
+                disabled={!selectedSlot}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3"
+            >
+                {bookingLoading ? "Processing..." : "Book Now"}
+            </button>
+            {bookingError && <p className="text-red-500 mt-2">{bookingError}</p>}
+
         </div>
     );
 };
