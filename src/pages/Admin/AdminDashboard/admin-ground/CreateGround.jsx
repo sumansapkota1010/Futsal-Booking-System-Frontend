@@ -1,10 +1,221 @@
-import React from 'react'
+import React from "react";
+import { useFormik } from "formik";
+import axios from "axios";
+import { groundSchema } from "../../../../schemas";
+import { useNavigate } from "react-router-dom";
+
+const initialValues = {
+    name: "",
+    location: "",
+    pricePerHour: "",
+    groundImage: null,
+    capacity: "",
+    size: "",
+    operatingHours: "",
+    slots: [],
+    reviews: [],
+};
+
+
+
 
 const CreateGround = () => {
-    return (
-        <>
-        </>
-    )
-}
+    const navigate = useNavigate()
+    const {
+        values,
+        errors,
+        touched,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        setFieldValue,
+        isSubmitting,
+    } = useFormik({
+        initialValues,
+        validationSchema: groundSchema,
+        onSubmit: async (values, { resetForm, setSubmitting }) => {
+            console.log("Submitting form data:", values);
 
-export default CreateGround
+            const formData = new FormData();
+            formData.append("name", values.name);
+            formData.append("location", values.location);
+            formData.append("pricePerHour", values.pricePerHour);
+            formData.append("capacity", values.capacity);
+            formData.append("size", values.size);
+            formData.append("operatingHours", (values.operatingHours));
+            formData.append("slots", JSON.stringify(values.slots));
+            formData.append("reviews", JSON.stringify(values.reviews));
+
+            if (values.groundImage) {
+                formData.append("groundImage", values.groundImage);
+            }
+
+            try {
+                const response = await axios.post(
+                    "http://localhost:3000/api/createground",
+                    formData,
+                    {
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                            Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        },
+                    }
+                );
+
+                if (response.status === 201) {
+                    alert("Ground created successfully");
+                    navigate("/admin")
+                    resetForm();
+                } else {
+                    alert("Ground creation failed. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error creating ground:", error);
+                alert(error.response?.data?.error || "Something went wrong.");
+            } finally {
+                setSubmitting(false);
+            }
+        }
+    });
+
+    return (
+        <div className="min-h-screen bg-gray-100 p-8">
+            <div className="max-w-7xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+                <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">
+                    Create New Ground
+                </h1>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Name */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Name</label>
+                        <input
+                            type="text"
+                            name="name"
+                            value={values.name}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                        />
+                        {touched.name && errors.name && (
+                            <div className="text-red-500 text-sm mt-1">{errors.name}</div>
+                        )}
+                    </div>
+
+                    {/* Location */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Location</label>
+                        <input
+                            type="text"
+                            name="location"
+                            value={values.location}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                        />
+                        {touched.location && errors.location && (
+                            <div className="text-red-500 text-sm mt-1">{errors.location}</div>
+                        )}
+                    </div>
+
+                    {/* Price Per Hour */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Price Per Hour</label>
+                        <input
+                            type="number"
+                            name="pricePerHour"
+                            value={values.pricePerHour}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                        />
+                        {touched.pricePerHour && errors.pricePerHour && (
+                            <div className="text-red-500 text-sm mt-1">{errors.pricePerHour}</div>
+                        )}
+                    </div>
+
+                    {/* Image Upload */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Image</label>
+                        <input
+                            type="file"
+                            name="groundImage"
+                            onChange={(event) => {
+                                setFieldValue("groundImage", event.currentTarget.files[0]);
+                            }}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                        />
+                        {touched.groundImage && errors.groundImage && (
+                            <div className="text-red-500 text-sm mt-1">{errors.groundImage}</div>
+                        )}
+                    </div>
+
+                    {/* Capacity */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Capacity</label>
+                        <input
+                            type="number"
+                            name="capacity"
+                            value={values.capacity}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                        />
+                        {touched.capacity && errors.capacity && (
+                            <div className="text-red-500 text-sm mt-1">{errors.capacity}</div>
+                        )}
+                    </div>
+
+                    {/* Size */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">Size</label>
+                        <input
+                            type="text"
+                            name="size"
+                            value={values.size}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                        />
+                        {touched.size && errors.size && (
+                            <div className="text-red-500 text-sm mt-1">{errors.size}</div>
+                        )}
+                    </div>
+
+                    {/* Operating Hours */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Operating Hours
+                        </label>
+                        <div className="flex space-x-4">
+                            <input
+                                type="text"
+                                name="operatingHours"
+                                value={values.operatingHours}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                                placeholder="Open Time"
+                                className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                        {touched.operatingHours && errors.operatingHours && (
+                            <div className="text-red-500 text-sm mt-1">{errors.operatingHours}</div>
+                        )}
+
+                    </div>
+
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                        {isSubmitting ? "Creating..." : "Create Ground"}
+                    </button>
+                </form>
+            </div>
+        </div>
+    );
+};
+
+export default CreateGround;

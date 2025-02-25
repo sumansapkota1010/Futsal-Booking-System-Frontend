@@ -80,7 +80,7 @@ const Grounds = () => {
                                     <strong>Price:</strong> Rs. {ground.pricePerHour} / hour
                                 </p>
                                 <p className="text-gray-700">
-                                    <strong>Open:</strong> {ground.operatingHours.openTime} - {ground.operatingHours.closeTime}
+                                    <strong>Opeerating Hours:</strong> {ground.operatingHours}
                                 </p>
                             </div>
 
