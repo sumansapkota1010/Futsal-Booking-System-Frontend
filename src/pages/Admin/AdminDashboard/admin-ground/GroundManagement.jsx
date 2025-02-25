@@ -13,8 +13,7 @@ const GroundManagement = () => {
                 return <AdminGround />
             case "create":
                 return <CreateGround />
-            case "edit":
-                return <UpdateGround />
+
 
 
             default:
@@ -37,9 +36,6 @@ const GroundManagement = () => {
                     <button onClick={() => { setActiveNavBar("create") }} className={` w-full flex items-center p-3 ${activeNavBar == "create" ? "bg-red-500 rounded-2xl" : ""}`}>Create</button>
                 </nav>
 
-                <nav>
-                    <div onClick={() => { setActiveNavBar("edit") }} className={` w-full flex items-center p-3 ${activeNavBar == "edit" ? "bg-red-500 rounded-2xl" : ""}`}>Update</div>
-                </nav>
             </div>
             <div className=" mt-8 ">
                 <header className="bg-white shadow-sm p-4 rounded-lg mb-6">

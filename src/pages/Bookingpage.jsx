@@ -25,9 +25,7 @@ const BookingPage = () => {
             setSelectedSlot(null);
         };
 
-
         document.addEventListener("click", handleClickOutside);
-
 
         return () => {
             document.removeEventListener("click", handleClickOutside);
@@ -35,15 +33,15 @@ const BookingPage = () => {
     }, []);
 
     const handleSlotClick = (slot, e) => {
-        e.stopPropagation()
+        e.stopPropagation();
         if (!slot.isBooked) {
             setSelectedSlot(slot);
         }
     };
 
     const handleBooking = async (slotId) => {
-        const slot = slots.find((slot) => slot._id === slotId);
-        if (!slot) return;
+        const slot = validSlots.find((slot) => slot._id === slotId);
+        if (!slot || !slot.ground) return;
 
         const groundId = slot.ground._id;
 
@@ -81,10 +79,11 @@ const BookingPage = () => {
         return <div className="text-center mt-8 text-red-500 font-semibold">No Slot Available</div>;
     }
 
+    const validSlots = slots.filter(slot => slot.ground !== null);
 
     const uniqueDates = [];
     const uniqueGrounds = [];
-    slots.forEach((slot) => {
+    validSlots.forEach((slot) => {
         const date = new Date(slot.date).toLocaleDateString();
         const groundName = slot.ground.name;
 
@@ -96,7 +95,7 @@ const BookingPage = () => {
         }
     });
 
-    const filteredSlots = slots.filter((slot) => {
+    const filteredSlots = validSlots.filter((slot) => {
         const slotDate = new Date(slot.date).toLocaleDateString();
         const slotGround = slot.ground.name;
 
@@ -108,7 +107,6 @@ const BookingPage = () => {
 
     return (
         <div className="max-w-2xl mx-auto p-6">
-
             <div className="mb-4">
                 <label className="block text-gray-700 font-semibold">Select Date</label>
                 <select
@@ -124,7 +122,6 @@ const BookingPage = () => {
                     ))}
                 </select>
             </div>
-
 
             <div className="mb-4">
                 <label className="block text-gray-700 font-semibold">Select Ground</label>
@@ -162,17 +159,19 @@ const BookingPage = () => {
                 </div>
             </div>
 
-
             {selectedSlot && (
                 <div className="mt-4 p-2 bg-blue-100 rounded text-blue-700 font-medium">
                     Selected Slot: {selectedSlot.startTime} - {selectedSlot.endTime}
                     <br />
-                    Ground: {selectedSlot.ground?.name}
-                    <br />
+                    {selectedSlot.ground && (
+                        <>
+                            Ground: {selectedSlot.ground.name}
+                            <br />
+                        </>
+                    )}
                     Date: {new Date(selectedSlot.date).toLocaleDateString()}
                 </div>
             )}
-
 
             <button
                 onClick={() => handleBooking(selectedSlot?._id)}
