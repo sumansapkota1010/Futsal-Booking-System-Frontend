@@ -16,11 +16,8 @@ const initialValues = {
     reviews: [],
 };
 
-
-
-
 const CreateGround = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const {
         values,
         errors,
@@ -42,7 +39,7 @@ const CreateGround = () => {
             formData.append("pricePerHour", values.pricePerHour);
             formData.append("capacity", values.capacity);
             formData.append("size", values.size);
-            formData.append("operatingHours", (values.operatingHours));
+            formData.append("operatingHours", values.operatingHours);
             formData.append("slots", JSON.stringify(values.slots));
             formData.append("reviews", JSON.stringify(values.reviews));
 
@@ -64,7 +61,7 @@ const CreateGround = () => {
 
                 if (response.status === 201) {
                     alert("Ground created successfully");
-                    navigate("/admin")
+                    navigate("/admin");
                     resetForm();
                 } else {
                     alert("Ground creation failed. Please try again.");
@@ -75,13 +72,13 @@ const CreateGround = () => {
             } finally {
                 setSubmitting(false);
             }
-        }
+        },
     });
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
-            <div className="max-w-7xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-                <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">
+        <div className="min-h-screen bg-gradient-to-r from-blue-50 to-green-50 p-8">
+            <div className="max-w-5xl mx-auto bg-white p-8 rounded-xl shadow-xl">
+                <h1 className="text-4xl font-extrabold text-center mb-8 text-teal-600 tracking-wide">
                     Create New Ground
                 </h1>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -94,7 +91,7 @@ const CreateGround = () => {
                             value={values.name}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                            className="mt-2 block w-full p-4 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200"
                         />
                         {touched.name && errors.name && (
                             <div className="text-red-500 text-sm mt-1">{errors.name}</div>
@@ -110,7 +107,7 @@ const CreateGround = () => {
                             value={values.location}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                            className="mt-2 block w-full p-4 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200"
                         />
                         {touched.location && errors.location && (
                             <div className="text-red-500 text-sm mt-1">{errors.location}</div>
@@ -126,7 +123,7 @@ const CreateGround = () => {
                             value={values.pricePerHour}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                            className="mt-2 block w-full p-4 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200"
                         />
                         {touched.pricePerHour && errors.pricePerHour && (
                             <div className="text-red-500 text-sm mt-1">{errors.pricePerHour}</div>
@@ -142,7 +139,7 @@ const CreateGround = () => {
                             onChange={(event) => {
                                 setFieldValue("groundImage", event.currentTarget.files[0]);
                             }}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                            className="mt-2 block w-full p-4 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200"
                         />
                         {touched.groundImage && errors.groundImage && (
                             <div className="text-red-500 text-sm mt-1">{errors.groundImage}</div>
@@ -158,7 +155,7 @@ const CreateGround = () => {
                             value={values.capacity}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                            className="mt-2 block w-full p-4 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200"
                         />
                         {touched.capacity && errors.capacity && (
                             <div className="text-red-500 text-sm mt-1">{errors.capacity}</div>
@@ -174,7 +171,7 @@ const CreateGround = () => {
                             value={values.size}
                             onChange={handleChange}
                             onBlur={handleBlur}
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-lg"
+                            className="mt-2 block w-full p-4 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200"
                         />
                         {touched.size && errors.size && (
                             <div className="text-red-500 text-sm mt-1">{errors.size}</div>
@@ -183,32 +180,26 @@ const CreateGround = () => {
 
                     {/* Operating Hours */}
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">
-                            Operating Hours
-                        </label>
-                        <div className="flex space-x-4">
-                            <input
-                                type="text"
-                                name="operatingHours"
-                                value={values.operatingHours}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                placeholder="Open Time"
-                                className="mt-1 block w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            />
-                        </div>
+                        <label className="block text-sm font-medium text-gray-700">Operating Hours</label>
+                        <input
+                            type="text"
+                            name="operatingHours"
+                            value={values.operatingHours}
+                            onChange={handleChange}
+                            onBlur={handleBlur}
+                            placeholder="Enter Operating Hours"
+                            className="mt-2 block w-full p-4 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition duration-200"
+                        />
                         {touched.operatingHours && errors.operatingHours && (
                             <div className="text-red-500 text-sm mt-1">{errors.operatingHours}</div>
                         )}
-
                     </div>
-
 
                     {/* Submit Button */}
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        className="w-full bg-teal-600 text-white py-3 px-4 rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transition duration-300"
                     >
                         {isSubmitting ? "Creating..." : "Create Ground"}
                     </button>

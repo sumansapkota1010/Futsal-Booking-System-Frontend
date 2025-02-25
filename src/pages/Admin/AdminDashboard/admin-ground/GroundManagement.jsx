@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AdminGround from './AdminGround';
 import CreateGround from './CreateGround';
-import { UpdateGround } from './UpdateGround';
+
 
 const GroundManagement = () => {
     const [activeNavBar, setActiveNavBar] = useState("grounds");
@@ -37,10 +37,8 @@ const GroundManagement = () => {
                     </button>
                 </nav>
             </div>
-            <div className="px-8">
-                <header className="bg-white shadow-md rounded-lg mb-6 p-6">
-                    <h1 className="text-3xl font-bold text-gray-800 capitalize">{activeNavBar}</h1>
-                </header>
+            <div className="px-8 pt-0">
+
                 <div className="bg-white p-6 rounded-lg shadow-md">{renderContent()}</div>
             </div>
         </div>

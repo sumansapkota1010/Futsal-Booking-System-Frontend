@@ -9,6 +9,7 @@ import CheckoutPage from "./pages/CheckOutPage"
 import PaymentSuccess from "./pages/PaymentSuccess"
 import ProtectedRoute from "./pages/ProtectedRoute"
 import AdminPanel from "./pages/Admin/AdminDashboard/AdminPanel"
+import UpdateGround from "./pages/Admin/AdminDashboard/admin-ground/UpdateGround"
 
 
 
@@ -41,13 +42,21 @@ function App() {
       element: <PaymentSuccess />
     },
     {
-      path: "admin",
+      path: "/admin",
       element: (
         <ProtectedRoute>
           <AdminPanel />
         </ProtectedRoute>
       ),
     },
+    {
+      path: "/admin/:id",
+      element: (
+        <ProtectedRoute>
+          <UpdateGround />
+        </ProtectedRoute>
+      )
+    }
   ])
 
   return (

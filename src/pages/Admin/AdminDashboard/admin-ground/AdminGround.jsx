@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Pencil, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const AdminGround = () => {
     const [grounds, setGrounds] = useState([]);
+    const navigate = useNavigate()
 
 
     useEffect(() => {
@@ -37,7 +39,8 @@ const AdminGround = () => {
 
 
     const handleEdit = (id) => {
-        console.log("Edit Ground:", id);
+        navigate(`/admin/${id}`)
+
     };
 
     return (
