@@ -60,8 +60,7 @@ const AdminSlot = () => {
                     <thead className="bg-blue-500 text-white">
                         <tr>
 
-
-                            <th className="p-3 text-left">Slots</th>
+                            <th className="p-3 text-left">Ground</th>
                             <th className="p-3 text-left">Start Time</th>
                             <th className="p-3 text-left">End Time</th>
                             <th className="p-3 text-left">Price</th>
@@ -87,15 +86,13 @@ const AdminSlot = () => {
                                         <td className="p-3">{slot.price} </td>
 
                                         <td className="p-3">{slot.isBooked ? "completed" : "pending"} </td>
-                                        <td className="p-3">{slot.bookedBy?._id} </td>
+                                        <td className="p-3">{slot.bookedBy?.userName || "Not Booked"} </td>
 
 
 
 
                                         <td className="p-3 text-right">
-                                            <button onClick={() => handleEdit(slot._id)} className="text-blue-500 hover:text-blue-700 mx-2">
-                                                <Pencil size={18} />
-                                            </button>
+
                                             <button onClick={() => handleDelete(slot._id)} className="text-red-500 hover:text-red-700">
                                                 <Trash2 size={18} />
                                             </button>

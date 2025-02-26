@@ -79,7 +79,7 @@ const BookingManagement = () => {
                     <tbody>
                         {bookings.map((booking) => (
                             <tr key={booking._id} className="text-center">
-                                <td className="border p-2">{booking.user?.name || "N/A"}</td>
+                                <td className="border p-2">{booking.user?.userName || "N/A"}</td>
                                 <td className="border p-2">{booking.ground?.name || "N/A"}</td>
                                 <td className="border p-2">
                                     {booking.slot?.startTime} - {booking.slot?.endTime}
@@ -88,7 +88,7 @@ const BookingManagement = () => {
                                     {booking.payment ? `$${booking.payment.amount}` : "Unpaid"}
                                 </td>
                                 <td className="border p-2">{booking.status}</td>
-                                <td className="border p-2">
+                                <td className="flex justify-center space-x-7 border p-2">
                                     {booking.status !== "cancelled" ? (
                                         <button
                                             onClick={() => handleCancelBooking(booking._id)}
@@ -99,15 +99,16 @@ const BookingManagement = () => {
                                     ) : (
                                         <span className="text-gray-500">Cancelled</span>
                                     )}
-                                </td>
-                                <td className="border p-2">
+
                                     <button
                                         onClick={() => handleDeleteBooking(booking._id)}
-                                        className="bg-red-500 text-white px-3 py-1 rounded"
+                                        className="  bg-red-500 text-white px-3 py-1 rounded"
                                     >
                                         Delete
                                     </button>
+
                                 </td>
+
                             </tr>
                         ))}
                     </tbody>
