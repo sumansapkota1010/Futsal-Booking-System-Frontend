@@ -26,4 +26,10 @@ export const groundSchema = Yup.object().shape({
     operatingHours: Yup.string().required("Operating Hours is required")
 })
 
+export const slotSchema = Yup.object({
+    ground: Yup.string().required("Ground ID is required"),
+    startTime: Yup.string().required("Start Time is required"),
+    endTime: Yup.string().required("End time is required"),
+    price: Yup.number().required("Please provide price ")
+})
 

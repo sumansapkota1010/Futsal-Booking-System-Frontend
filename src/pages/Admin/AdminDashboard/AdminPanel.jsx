@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import GroundManagement from './admin-ground/GroundManagement';
 import SlotManagement from './admin-slot/SlotManagement';
+import BookingManagement from './admin-booking/BookingManagement';
+
 
 const AdminPanel = () => {
     const [activeTab, setActiveTab] = useState("ground")
@@ -11,6 +13,8 @@ const AdminPanel = () => {
                 return <GroundManagement />
             case "slot":
                 return <SlotManagement />
+            case "booking":
+                return <BookingManagement />
 
             default:
                 return <GroundManagement />
@@ -30,6 +34,11 @@ const AdminPanel = () => {
                 </nav>
                 <nav className=''>
                     <button onClick={() => setActiveTab("slot")} className={`w-full flex items-center  text-[#4318ff] px-4 py-3 hover:text-orange-500 ${activeTab == "slot" ? "bg-[#a3aed0]" : ""} `} ><span>Slot</span></button>
+
+
+                </nav>
+                <nav className=''>
+                    <button onClick={() => setActiveTab("booking")} className={`w-full flex items-center  text-[#4318ff] px-4 py-3 hover:text-orange-500 ${activeTab == "booking" ? "bg-[#a3aed0]" : ""} `} ><span>Bookings</span></button>
 
 
                 </nav>

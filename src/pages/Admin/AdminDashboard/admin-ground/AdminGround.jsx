@@ -54,6 +54,7 @@ const AdminGround = () => {
                 <table className="w-full border-collapse">
                     <thead className="bg-blue-500 text-white">
                         <tr>
+                            <th className="p-3 text-left">Ground ID</th>
                             <th className="p-3 text-left">Ground Name</th>
                             <th className="p-3 text-left">Slots</th>
                             <th className="p-3 text-left">Capacity</th>
@@ -72,6 +73,7 @@ const AdminGround = () => {
                             ) :
                                 grounds.map((ground, index) => (
                                     <tr key={ground._id} className={`border-b }`}>
+                                        <td className="p-3">{ground._id}</td>
                                         <td className="p-3">{ground.name}</td>
                                         <td className="p-3">{ground.slots.length} slots</td>
                                         <td className="p-3">{ground.capacity} Player</td>
