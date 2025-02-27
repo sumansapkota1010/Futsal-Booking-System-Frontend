@@ -28,7 +28,12 @@ const Grounds = () => {
     }, [])
 
     const handleBookNow = () => {
-        navigate("/bookings")
+        if (localStorage.getItem("token")) {
+            navigate("/bookings")
+
+        } else {
+            alert("You must first login")
+        }
     }
 
 

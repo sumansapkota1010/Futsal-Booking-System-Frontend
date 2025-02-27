@@ -15,7 +15,10 @@ const NavBar = () => {
 
 
     useEffect(() => {
-        dispatch(fetchProfile());
+        if (localStorage.getItem("token")) {
+
+            dispatch(fetchProfile());
+        }
     }, [dispatch]);
 
 
@@ -147,7 +150,7 @@ const NavBar = () => {
                     ) : (
                         <>
                             <NavLink to="#" onClick={handleLogout}>Logout</NavLink>
-                            <NavLink className='text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] '>   {profileData} Dashboard</NavLink>
+                            <NavLink to="/user" className='text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] '>   {profileData} Dashboard</NavLink>
                         </>
                     )}
                     <NavLink to="/admin" isRouterLink>Admin Dashboard</NavLink>
