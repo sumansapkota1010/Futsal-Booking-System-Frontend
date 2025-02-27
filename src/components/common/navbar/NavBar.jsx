@@ -125,9 +125,12 @@ const NavBar = () => {
                                     <NavLink to="/login" isRouterLink>Login</NavLink>
                                 </div>
                             ) : (
-                                <NavLink to="#" onClick={handleLogout}>Logout</NavLink>
+                                <>
+                                    <NavLink to="#" onClick={handleLogout}>Logout</NavLink>
+                                    <p className='text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] '>  Hello {profileData}</p>
+                                </>
                             )}
-                            <NavLink to="/admin-dashboard" isRouterLink>Admin Dashboard</NavLink>
+                            <NavLink to="/admin" isRouterLink>Admin Dashboard</NavLink>
                         </div>
                     </div>
                 )}
@@ -144,10 +147,10 @@ const NavBar = () => {
                     ) : (
                         <>
                             <NavLink to="#" onClick={handleLogout}>Logout</NavLink>
-                            <p className='text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] '>  Hello {profileData}</p>
+                            <NavLink className='text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] '>   {profileData} Dashboard</NavLink>
                         </>
                     )}
-                    <NavLink to="/admin-dashboard" isRouterLink>Admin Dashboard</NavLink>
+                    <NavLink to="/admin" isRouterLink>Admin Dashboard</NavLink>
 
                 </div>
             </div>

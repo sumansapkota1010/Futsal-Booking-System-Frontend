@@ -122,7 +122,7 @@ const LoginPage = () => {
                     </p>
 
                     <div className="flex justify-center items-center text-sm text-gray-500 mt-5">
-                        <a href="#" className="text-red-400">Forgot password?</a>
+                        <Link to="/forgotpassword" className="text-red-400">Forgot password?</Link>
                     </div>
 
                 </div>

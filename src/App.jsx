@@ -10,6 +10,7 @@ import PaymentSuccess from "./pages/PaymentSuccess"
 import ProtectedRoute from "./pages/ProtectedRoute"
 import AdminPanel from "./pages/Admin/AdminDashboard/AdminPanel"
 import UpdateGround from "./pages/Admin/AdminDashboard/admin-ground/UpdateGround"
+import ForgotPassword from "./pages/ForgotPassword"
 
 
 
@@ -28,6 +29,10 @@ function App() {
     {
       path: "/login",
       element: <LoginPage />
+    },
+    {
+      path: "/forgotpassword",
+      element: <ForgotPassword />
     },
     {
       path: "/bookings",

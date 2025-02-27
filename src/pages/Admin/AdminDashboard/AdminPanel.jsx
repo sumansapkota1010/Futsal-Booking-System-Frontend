@@ -3,6 +3,8 @@ import GroundManagement from './admin-ground/GroundManagement';
 import SlotManagement from './admin-slot/SlotManagement';
 import BookingManagement from './admin-booking/BookingManagement';
 import PaymentManagement from './admin-payment/PaymentManagement';
+import UserManagement from './admin-user/UserManagement';
+import ContactManagement from './admin-contact/ContactManagement';
 
 
 const AdminPanel = () => {
@@ -18,6 +20,10 @@ const AdminPanel = () => {
                 return <BookingManagement />
             case "payment":
                 return <PaymentManagement />
+            case "user":
+                return <UserManagement />
+            case "contact":
+                return <ContactManagement />
 
             default:
                 return <GroundManagement />
@@ -47,6 +53,16 @@ const AdminPanel = () => {
                 </nav>
                 <nav className=''>
                     <button onClick={() => setActiveTab("payment")} className={`w-full flex items-center  text-[#4318ff] px-4 py-3 hover:text-orange-500 ${activeTab == "payment" ? "bg-[#a3aed0]" : ""} `} ><span>Payment</span></button>
+
+
+                </nav>
+                <nav className=''>
+                    <button onClick={() => setActiveTab("user")} className={`w-full flex items-center  text-[#4318ff] px-4 py-3 hover:text-orange-500 ${activeTab == "user" ? "bg-[#a3aed0]" : ""} `} ><span>User</span></button>
+
+
+                </nav>
+                <nav className=''>
+                    <button onClick={() => setActiveTab("contact")} className={`w-full flex items-center  text-[#4318ff] px-4 py-3 hover:text-orange-500 ${activeTab == "contact" ? "bg-[#a3aed0]" : ""} `} ><span>Contact</span></button>
 
 
                 </nav>
