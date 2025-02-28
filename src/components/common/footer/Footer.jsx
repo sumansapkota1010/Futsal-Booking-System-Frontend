@@ -3,6 +3,13 @@ import { FaEnvelope, FaFacebookF, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaTwi
 import { Link } from 'react-router-dom'
 
 const Footer = () => {
+
+
+    const handleClick = () => {
+        localStorage.getItem("token") ? <Link to="/bookings"></Link> : alert("You must first login for booking")
+    }
+
+
     return (
         <footer className="bg-green-800 text-gray-300 py-10">
             <div className="container  mx-auto px-6 lg:px-20">
@@ -37,7 +44,7 @@ const Footer = () => {
                         <h2 className="text-xl font-bold text-white mb-4">Quick Links</h2>
                         <ul className="space-y-3">
                             <li><Link to="/" className="hover:text-yellow-400 transition">Home</Link></li>
-                            <li><Link to="/bookings" className="hover:text-yellow-400 transition">Bookings</Link></li>
+                            <li onClick={handleClick} className="hover:text-yellow-400 transition">Bookings</li>
                             <li><Link to="/pricing" className="hover:text-yellow-400 transition">Pricing</Link></li>
                             <li><Link to="/contact" className="hover:text-yellow-400 transition">Contact</Link></li>
                         </ul>

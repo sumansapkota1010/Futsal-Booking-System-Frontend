@@ -61,6 +61,7 @@ const NavBar = () => {
     };
 
     const profileData = profile.userName
+    console.log(profile.role)
 
     return (
         <nav className="bg-[#E5E5E5] p-4 text-black">
@@ -130,9 +131,10 @@ const NavBar = () => {
                             ) : (
                                 <>
                                     <NavLink to="#" onClick={handleLogout}>Logout</NavLink>
-                                    <p className='text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] '>  Hello {profileData}</p>
+                                    <p className='text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] '>  Hello  {profileData}</p>
                                 </>
                             )}
+
                             <NavLink to="/admin" isRouterLink>Admin Dashboard</NavLink>
                         </div>
                     </div>
@@ -150,10 +152,28 @@ const NavBar = () => {
                     ) : (
                         <>
                             <NavLink to="#" onClick={handleLogout}>Logout</NavLink>
-                            <NavLink to="/user" className='text-black hover:text-[#f5a425] active:text-[#f5a425] text-[14px] font-medium py-2 tracking-[1px] '>   {profileData} Dashboard</NavLink>
+
                         </>
                     )}
-                    <NavLink to="/admin" isRouterLink>Admin Dashboard</NavLink>
+                    {
+                        profile && profile.role === "player" ? (
+                            <NavLink to="/user" isRouterLink>{profileData} Dashboard</NavLink>
+                        ) : (
+                            <NavLink
+                                onClick={() => localStorage.getItem("token") ? navigate("/admin") : alert("Needs Admin Login")}
+                                isRouterLink
+
+
+                            >
+                                Admin Dashboard
+                            </NavLink>
+                        )
+                    }
+
+
+
+
+
 
                 </div>
             </div>

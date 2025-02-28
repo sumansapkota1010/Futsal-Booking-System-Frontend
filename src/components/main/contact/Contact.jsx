@@ -1,9 +1,55 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useState } from 'react'
 import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa'
 
 const Contact = () => {
+
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        subject: "",
+        message: ""
+    })
+    const [isLoading, setIsLoading] = useState(false)
+
+    const handleChange = (e) => {
+        e.preventDefault()
+        setFormData({
+
+            ...formData, [e.target.name]: e.target.value,
+        }
+        )
+    }
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        if (localStorage.getItem("token")) {
+            try {
+                setIsLoading(true)
+                const response = await axios.post("http://localhost:3000/api/contact", formData, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
+
+                alert("Message Sent Successfully")
+
+
+            } catch (error) {
+                console.error("Error in posting contact data", error)
+            } finally {
+                setIsLoading(false)
+            }
+        } else {
+            alert("You must first log in to send message")
+        }
+
+
+
+    }
+
+
     return (
-        <div className="     flex items-center justify-center min-h-screen  bg-[#E5E5E5]  px-4">
+        <div className="flex items-center justify-center min-h-screen  bg-[#E5E5E5]  px-4">
             <div className="w-full max-w-4xl bg-[#31942C]  backdrop-blur-lg p-8 rounded-2xl shadow-lg border border-white/20">
                 <h2 className="text-3xl font-bold text-white text-center mb-6">
                     Contact Us
@@ -30,26 +76,55 @@ const Contact = () => {
                     </div>
 
 
-                    <form className="space-y-4">
-                        <input
-                            type="text"
-                            placeholder="Your Name"
-                            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                        />
-                        <input
-                            type="email"
-                            placeholder="Your Email"
-                            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                        />
-                        <textarea
-                            rows="4"
-                            placeholder="Your Message"
-                            className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                        ></textarea>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="mb-4">
+                            <input
+                                type="text"
+                                placeholder="Your Name"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <input
+                                type="email"
+                                name='email'
+                                onChange={handleChange}
+                                value={formData.email}
+                                placeholder="Your Email"
+                                className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            />
+
+                        </div>
+                        <div className="mb-4">
+                            <input
+                                type="text"
+                                name='subject'
+                                onChange={handleChange}
+                                value={formData.subject}
+                                placeholder="Your Subject"
+                                className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            />
+                        </div>
+                        <div className="mb-4">
+
+                            <textarea
+                                rows="4"
+                                name='message'
+                                onChange={handleChange}
+                                value={formData.message}
+                                placeholder="Your Message"
+                                className="w-full px-4 py-3 rounded-lg bg-gray-800 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                            ></textarea>
+                        </div>
+
                         <button className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-3 rounded-lg transition">
                             Send Message
                         </button>
                     </form>
+
                 </div>
             </div>
         </div>
