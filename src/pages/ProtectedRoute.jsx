@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchProfile } from '../redux/slice/profile'
 import accessDenied from '../assets/court/access-denied-stamp-png.png'
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, requiredRole }) => {
 
     const dispatch = useDispatch()
     const { profile, isLoading, error } = useSelector((state) => state.profile)
@@ -25,10 +25,10 @@ const ProtectedRoute = ({ children }) => {
         return <div>Error: {error}</div>
     }
 
-    const isAdmin = profile?.role === "admin"
-    console.log(isAdmin)
+    const hasAccess = profile?.role === requiredRole;
+    console.log(hasAccess)
     return (
-        isAdmin ? children : (
+        hasAccess ? children : (
             <div className="flex items-center justify-center h-screen overflow-hidden">
                 <div className="h-full w-full">
                     <img

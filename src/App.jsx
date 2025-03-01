@@ -11,6 +11,7 @@ import ProtectedRoute from "./pages/ProtectedRoute"
 import AdminPanel from "./pages/Admin/AdminDashboard/AdminPanel"
 import UpdateGround from "./pages/Admin/AdminDashboard/admin-ground/UpdateGround"
 import ForgotPassword from "./pages/ForgotPassword"
+import UserPanel from "./pages/UserDashboard/UserPanel"
 
 
 
@@ -47,9 +48,20 @@ function App() {
       element: <PaymentSuccess />
     },
     {
+
+    },
+    {
+      path: "/user",
+      element: (
+        <ProtectedRoute requiredRole="player">
+          <UserPanel />
+        </ProtectedRoute>
+      )
+    },
+    {
       path: "/admin",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute requiredRole="admin">
           <AdminPanel />
         </ProtectedRoute>
       ),
@@ -57,7 +69,7 @@ function App() {
     {
       path: "/admin/:id",
       element: (
-        <ProtectedRoute>
+        <ProtectedRoute requiredRole="admin">
           <UpdateGround />
         </ProtectedRoute>
       )

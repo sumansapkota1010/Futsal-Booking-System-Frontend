@@ -26,7 +26,7 @@ const Grounds = () => {
         fetchGrounds()
 
     }, [])
-
+        
     const handleBookNow = () => {
         if (localStorage.getItem("token")) {
             navigate("/bookings")
