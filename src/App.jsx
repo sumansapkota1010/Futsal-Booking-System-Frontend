@@ -12,6 +12,7 @@ import AdminPanel from "./pages/Admin/AdminDashboard/AdminPanel"
 import UpdateGround from "./pages/Admin/AdminDashboard/admin-ground/UpdateGround"
 import ForgotPassword from "./pages/ForgotPassword"
 import UserPanel from "./pages/UserDashboard/UserPanel"
+import VerifyOtp from "./pages/VerifyOtp"
 
 
 
@@ -34,6 +35,10 @@ function App() {
     {
       path: "/forgotpassword",
       element: <ForgotPassword />
+    },
+    {
+      path: "/verifyotp",
+      element: <VerifyOtp />
     },
     {
       path: "/bookings",
