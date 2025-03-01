@@ -1,11 +1,14 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { MdCancel } from "react-icons/md";
+
 
 const MyBooking = () => {
 
     const [bookings, setBookings] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState("")
+
 
 
     useEffect(() => {
@@ -19,7 +22,7 @@ const MyBooking = () => {
                         }
                     }
                 )
-                console.log(response.data)
+                console.log(response.data.data)
                 setBookings(response.data.data)
 
             }
@@ -31,6 +34,39 @@ const MyBooking = () => {
             setIsLoading(false)
         }
     }, [])
+
+    const handleCancel = async (id) => {
+        if (!id) return;
+
+        const isConfirmed = window.confirm(
+            "Are you sure you want to cancel your booking? This action cannot be undone."
+        );
+
+        if (isConfirmed) {
+            try {
+                const response = await axios.post(
+                    `http://localhost:3000/api/bookings/cancel/${id}`,
+                    {},
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem('token')}`,
+                        },
+                    }
+                );
+
+                if (response.status === 200) {
+                    alert("Booking cancelled successfully");
+                }
+            } catch (error) {
+                const errorMessage = error.response?.data?.message || "Failed to cancel booking. Please try again.";
+                setError(errorMessage);
+                alert(errorMessage);
+            }
+        } else {
+            alert("Booking not cancelled");
+        }
+    };
+
 
     if (isLoading) {
         return <div className="text-center py-6">Loading...</div>;
@@ -53,10 +89,12 @@ const MyBooking = () => {
                             <th className="p-3 text-left">Start Time</th>
                             <th className="p-3 text-left">End Time</th>
                             <th className="p-3 text-left">Date</th>
+                            <th className="p-3 text-left">Booking Status</th>
+
                             <th className="p-3 text-left">Price</th>
                             <th className="p-3 text-left">Amount</th>
-                            <th className="p-3 text-left">Status </th>
-                            <th className="p-3 text-right">Actions</th>
+                            <th className="p-3 text-left">Payment Status </th>
+                            <th className="p-3 text-left">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,21 +112,21 @@ const MyBooking = () => {
                                         <td className="p-3">{booking.slot?.startTime} </td>
                                         <td className="p-3">{booking.slot?.endTime} </td>
                                         <td className="p-3">{booking.slot?.date} </td>
+                                        <td className="p-3">{booking.status} </td>
+
                                         <td className="p-3">{booking.slot?.price} </td>
                                         <td className="p-3">{booking.payment?.amount} </td>
                                         <td className="p-3">{booking.payment?.status} </td>
-                                        <td className="p-3 text-right">
+                                        <td className="p-3 flex text-left ">
 
-                                            <button onClick={() => handleDelete(slot._id)} className="text-red-500 hover:text-red-700">
-                                                <Trash2 size={18} />
+                                            <button onClick={() => handleCancel(booking._id)} className=" flex gap-1   text-red-500 hover:text-red-700">
+
+                                                Cancel   <MdCancel className='mr-5 mt-1' size={18} />
                                             </button>
+
                                         </td>
                                     </tr>
                                 ))}
-
-
-
-
                     </tbody>
                 </table>
             </div>
