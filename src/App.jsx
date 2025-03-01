@@ -13,6 +13,7 @@ import UpdateGround from "./pages/Admin/AdminDashboard/admin-ground/UpdateGround
 import ForgotPassword from "./pages/ForgotPassword"
 import UserPanel from "./pages/UserDashboard/UserPanel"
 import VerifyOtp from "./pages/VerifyOtp"
+import ResetPassword from "./pages/ResetPassword"
 
 
 
@@ -39,6 +40,10 @@ function App() {
     {
       path: "/verifyotp",
       element: <VerifyOtp />
+    },
+    {
+      path: "/resetpassword",
+      element: <ResetPassword />
     },
     {
       path: "/bookings",
