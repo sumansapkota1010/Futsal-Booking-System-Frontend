@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import axios from "axios";
 import { groundSchema } from "../../../../schemas";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const initialValues = {
     name: "",
@@ -60,15 +61,25 @@ const CreateGround = () => {
                 );
 
                 if (response.status === 201) {
-                    alert("Ground created successfully");
-                    navigate("/admin");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Ground Created',
+                        text: 'The ground has been created successfully.',
+                        showConfirmButton: false,
+                        timer: 1000,
+                    })
+                    setTimeout(() => {
+                        navigate("/admin");
+
+                    }, 1000);
                     resetForm();
-                } else {
-                    alert("Ground creation failed. Please try again.");
                 }
             } catch (error) {
-                console.error("Error creating ground:", error);
-                alert(error.response?.data?.error || "Something went wrong.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Ground Creation Failed",
+                    text: error.response?.data?.message || 'Ground creation Unsuccessful. Please try again.'
+                })
             } finally {
                 setSubmitting(false);
             }

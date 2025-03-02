@@ -42,15 +42,25 @@ const CreateSlot = () => {
                 );
 
                 if (response.status === 201) {
-                    alert("Slot created successfully");
-                    navigate("/admin");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Slot Created',
+                        text: 'The slot has been created successfully.',
+                        showConfirmButton: false,
+                        timer: 1000,
+                    })
+                    setTimeout(() => {
+                        navigate("/admin");
+
+                    }, 1000);
                     resetForm();
-                } else {
-                    alert("Slot creation failed. Please try again");
                 }
-            } catch (err) {
-                console.error("Error creating slot:", err);
-                alert(err.response?.data?.message || "Something went wrong");
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Slot Creation Failed",
+                    text: error.response?.data?.message || 'Slot creation Unsuccessful. Please try again.'
+                })
             } finally {
                 setSubmitting(false);
             }

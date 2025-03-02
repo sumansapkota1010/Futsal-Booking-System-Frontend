@@ -19,7 +19,7 @@ const UpdateGround = () => {
         reviews: [],
     });
 
-    // Fetch the ground data when the component mounts
+
     useEffect(() => {
         const fetchGround = async () => {
             try {
@@ -30,7 +30,7 @@ const UpdateGround = () => {
                 });
                 const ground = response.data.data;
 
-                // Set the initial values for the form
+
                 setInitialValues({
                     name: ground.name,
                     location: ground.location,
@@ -92,14 +92,25 @@ const UpdateGround = () => {
                 );
 
                 if (response.status === 200) {
-                    alert("Ground updated successfully");
-                    navigate("/admin");
-                } else {
-                    alert("Ground update failed. Please try again.");
+                    Swal.fire({
+                        icon: "success",
+                        title: "Ground Update Successfull",
+                        text: "The ground has been updated successfully",
+                        timer: 1000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    })
+                    setTimeout(() => {
+                        navigate("/admin");
+
+                    }, 1000);
                 }
             } catch (error) {
-                console.error("Error updating ground:", error);
-                alert(error.response?.data?.error || "Something went wrong.");
+                Swal.fire({
+                    icon: "error",
+                    title: "Ground Updation Failed",
+                    text: error.response?.data?.message || 'Group Updation Unsuccessfull. Please  try again.'
+                })
             } finally {
                 setSubmitting(false);
             }

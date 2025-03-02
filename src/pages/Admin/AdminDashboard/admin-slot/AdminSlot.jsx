@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const AdminSlot = () => {
     const [slots, setSlots] = useState([]);
@@ -19,7 +20,11 @@ const AdminSlot = () => {
                 setSlots(response.data.data);
                 console.log(response.data.data)
             } catch (error) {
-                console.error("Error fetching slots:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Slot Fetching Failed",
+                    text: error.response?.data?.message || 'Error in Fetching Slot ..Please try again.'
+                })
             }
         };
         fetchSlots();
@@ -27,18 +32,40 @@ const AdminSlot = () => {
 
     const handleDelete = async (id) => {
         if (!id) return
-
-        try {
-            await axios.delete(`http://localhost:3000/api/slot/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            })
-            setSlots(slots.filter(slot => slot._id !== id))
-
-        } catch (err) {
-            console.log("Error in deleting slots")
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        })
+        if (result.isConfirmed) {
+            try {
+                await axios.delete(`http://localhost:3000/api/slot/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
+                setSlots(slots.filter(slot => slot._id !== id))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Slot deleted',
+                    text: 'The slot has been deleted successfully.',
+                    showConfirmButton: false,
+                    timer: 1000,
+                })
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Slot deletiom failed",
+                    text: error.response?.data?.message || 'Slot deletion Unsuccessful. Please try again.'
+                })
+            }
         }
+
 
     }
 
