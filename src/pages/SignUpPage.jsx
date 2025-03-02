@@ -4,6 +4,8 @@ import { useFormik } from 'formik';
 import axios from 'axios';
 import { signUpSchema } from '../schemas';
 import { useNavigate, Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
 
 const initialValues = {
     name: "",
@@ -21,21 +23,31 @@ const SignUpPage = () => {
         onSubmit: async (values, { resetForm, setSubmitting }) => {
             try {
                 const response = await axios.post("http://localhost:3000/api/register", values);
-                console.log("Response from backend:", response.data);
+                console.log("Response from backend:", response.data.data);
 
                 if (response.status === 200) {
-                    navigate('/login');
-                    resetForm();
+                    Swal.fire({
+                        icon: "success",
+                        title: "Sign Up Successfull",
+                        text: "You will be redirect to login page..",
+                        timer: 1000,
+                        timerProgressBar: true,
+                        showConfirmButton: false
+                    })
+                    setTimeout(() => {
+                        navigate('/login');
+                        resetForm();
+
+                    }, 1000);
                 } else {
-                    alert("Registration failed. Please try again.");
+
                 }
             } catch (error) {
-                console.error("There is a problem with the registration:", error);
-                if (error.response) {
-                    alert(error.response.data.error || "Registration failed. Please try again.");
-                } else {
-                    alert("Network error. Please check your connection.");
-                }
+                Swal.fire({
+                    icon: "error",
+                    title: "Login Failed",
+                    text: error.response?.data?.message || 'Sign Unsuccessful.'
+                })
             } finally {
                 setSubmitting(false);
             }
