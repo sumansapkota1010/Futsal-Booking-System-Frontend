@@ -14,6 +14,7 @@ import ForgotPassword from "./pages/ForgotPassword"
 import UserPanel from "./pages/UserDashboard/UserPanel"
 import VerifyOtp from "./pages/VerifyOtp"
 import ResetPassword from "./pages/ResetPassword"
+import PaymentSuccess from "./pages/PaymentSuccess"
 
 
 
@@ -53,7 +54,10 @@ function App() {
       path: "/checkout",
       element: <CheckoutPage />
     },
-
+    {
+      path: "/payment-success",
+      element: <PaymentSuccess />
+    },
 
     {
       path: "/user",

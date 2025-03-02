@@ -31,12 +31,10 @@ const Checkout = () => {
             );
 
             console.log("Backend response:", response.data);
-
             if (response.data && response.data.payment_url) {
                 window.location.href = response.data.payment_url;
             } else if (response.data && response.data.success) {
-
-                navigate("/payment-success", { state: { bookingId, amount } });
+                navigate(`/payment-success?bookingId=${bookingId}&amount=${amount}`);
             }
         } catch (err) {
             console.error("Payment initiation failed:", err);
