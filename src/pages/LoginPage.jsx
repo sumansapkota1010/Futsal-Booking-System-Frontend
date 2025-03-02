@@ -4,6 +4,7 @@ import { useFormik } from 'formik';
 import { loginSchema } from '../schemas';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const initialValues = {
     email: "",
@@ -33,29 +34,33 @@ const LoginPage = () => {
                     if (profileResponse.status === 200) {
                         const { role } = profileResponse.data.data
 
-                        alert("Login successfull")
-                        if (role === "admin") {
-                            navigate("/admin")
-                        } else {
-                            navigate("/")
-                        }
+                        Swal.fire({
+                            icon: "success",
+                            title: "Login Successfull",
+                            text: "You will be redirect to...",
+                            timer: 1000,
+                            timerProgressBar: true,
+                            showConfirmButton: false
+                        })
 
+                        setTimeout(() => {
+                            if (role === "admin") {
+                                navigate("/admin")
+                            } else {
+                                navigate("/")
+                            }
+                        }, 1000)
 
                         console.log(profileResponse.data.data.role)
                     }
-
-
-
-
-
-
-                } else {
-                    alert("login unsuccessfull")
                 }
 
             } catch (error) {
-                console.log("🚀 ~ onSubmit: ~ error:", error)
-
+                Swal.fire({
+                    icon: "error",
+                    title: "Login Failed",
+                    text: error.response?.data?.message || 'Login Unsuccessful. Please check your credentials and try again.'
+                })
             } finally {
                 setSubmitting(false)
             }
