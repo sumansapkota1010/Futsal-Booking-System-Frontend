@@ -11,6 +11,14 @@ const PaymentManagement = () => {
         fetchPayment()
     }, [])
 
+
+    const formattedDate = (dateString) => {
+        const date = new Date(dateString)
+        const createdAt = date.toLocaleDateString("en-US")
+        return createdAt
+    }
+
+
     const fetchPayment = async () => {
 
         try {
@@ -47,19 +55,24 @@ const PaymentManagement = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {payments.map((payment) => (
-                            <tr key={payment._id} className="text-center">
-                                <td className="border p-2">{payment.user?.userName || "N/A"}</td>
-                                <td className="border p-2">{payment.booking?.ground?.name || "N/A"}</td>
-                                <td className="border p-2"> {payment.amount}</td>
-                                <td className="border p-2"> {payment?.status}</td>
-                                <td className="border p-2"> {payment?.createdAt}
-                                </td>
+                        {payments.map((payment) => {
+                            const createdAt = formattedDate(payment.createdAt)
 
+                            return (
+                                <tr key={payment._id} className="text-center">
+                                    <td className="border p-2">{payment.user?.userName || "N/A"}</td>
+                                    <td className="border p-2">{payment.booking?.ground?.name || "N/A"}</td>
+                                    <td className="border p-2"> {payment.amount}</td>
+                                    <td className="border p-2"> {payment?.status}</td>
+                                    <td className="border p-2"> {createdAt}
+                                    </td>
+                                </tr>
 
+                            )
 
-                            </tr>
-                        ))}
+                        }
+                        )}
+
                     </tbody>
                 </table>
             )}
