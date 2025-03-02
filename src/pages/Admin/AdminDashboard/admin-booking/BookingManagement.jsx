@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from 'sweetalert2';
 
 const BookingManagement = () => {
     const [bookings, setBookings] = useState([]);
@@ -19,41 +20,98 @@ const BookingManagement = () => {
             });
             setBookings(res.data);
         } catch (error) {
-            console.error("Error fetching bookings:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Error in Fetching Bookings",
+                text: error.response?.data?.message || 'Bookings fetching Unsuccessful. Please try again.'
+            })
         } finally {
             setLoading(false);
         }
     };
 
     const handleCancelBooking = async (bookingId) => {
-        try {
-            const response = await axios.post(`http://localhost:3000/api/bookings/admin/cancel/${bookingId}`, {}, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            alert("Booking cancelled successfully!");
-            fetchBookings();
-        } catch (error) {
-            console.error("Error cancelling booking:", error);
-            alert(error.response?.data?.message || "Failed to cancel booking.");
+
+        const result = await Swal.fire({
+            title: 'Are You Sure? You want to cancel?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, cancel it!',
+            cancelButtonText: 'Cancel',
+        })
+        if (result.isConfirmed) {
+
+            try {
+                const response = await axios.post(`http://localhost:3000/api/bookings/admin/cancel/${bookingId}`, {}, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cancelled Booking',
+                    text: 'The booking has been cancel successfully.',
+                    showConfirmButton: false,
+                    timer: 1000,
+                })
+
+                setTimeout(() => {
+
+                    fetchBookings();
+                }, 1000);
+
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Booking cancel failed",
+                    text: error.response?.data?.message || 'Booking cancel Unsuccessful. Please try again.'
+                })
+            }
         }
+
+
+
     };
     const handleDeleteBooking = async (bookingId) => {
         if (!bookingId) return
-        try {
-            const res = await axios.delete(`http://localhost:3000/api/bookings/admin/delete/${bookingId}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            });
-            /*    alert("Booking deleted successfully!"); */
-            setBookings((bookings).filter(booking => bookingId !== booking._id))
+        const result = await Swal.fire({
+            title: 'Are You Sure? You want to delete?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        })
+        if (result.isConfirmed) {
+            try {
+                const res = await axios.delete(`http://localhost:3000/api/bookings/admin/delete/${bookingId}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Booking deleted successfull',
+                    text: 'The booking has been deleted successfully.',
+                    showConfirmButton: false,
+                    timer: 1000,
+                })
+                setBookings((bookings).filter(booking => bookingId !== booking._id))
 
-        } catch (error) {
-            console.error("Error deleted  booking:", error);
-            alert(error.response?.data?.message || "Failed to delete booking.");
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Booking deletion Failed",
+                    text: error.response?.data?.message || 'Booking deletion Unsuccessful. Please try again.'
+                })
+            }
         }
+
     }
 
 
