@@ -34,7 +34,7 @@ const PaymentSuccess = () => {
                         <FaMoneyBillAlt className="text-2xl text-green-500" />
                         <div>
                             <p className="text-sm text-gray-500">Amount Paid</p>
-                            <p className="text-lg font-semibold text-gray-800">NPR {amount}</p>
+                            <p className="text-lg font-semibold text-gray-800">NPR {amount / 100}</p>
                         </div>
                     </div>
 
