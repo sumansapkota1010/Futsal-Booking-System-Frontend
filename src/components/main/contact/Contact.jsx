@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import { FaEnvelope, FaMapMarkerAlt, FaPhoneAlt } from 'react-icons/fa'
+import Swal from 'sweetalert2';
 
 const Contact = () => {
 
@@ -31,16 +32,30 @@ const Contact = () => {
                     }
                 })
 
-                alert("Message Sent Successfully")
+                Swal.fire({
+                    icon: "success",
+                    title: "Message sent successfully",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
 
 
             } catch (error) {
-                console.error("Error in posting contact data", error)
+                Swal.fire({
+                    icon: "error",
+                    title: "Sending message failed",
+                    text: error.response?.data?.message || 'Send Message Unsuccessful. Please  try again.'
+                })
             } finally {
                 setIsLoading(false)
             }
         } else {
-            alert("You must first log in to send message")
+            Swal.fire({
+                icon: "error",
+                title: "Cannot send message without Login",
+                text: 'Please Login to send Message '
+            })
         }
 
 

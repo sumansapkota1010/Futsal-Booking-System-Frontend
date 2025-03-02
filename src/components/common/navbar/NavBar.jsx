@@ -3,6 +3,7 @@ import { Link as ScrollLink } from 'react-scroll';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProfile } from '../../../redux/slice/profile';
+import Swal from 'sweetalert2';
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -160,7 +161,11 @@ const NavBar = () => {
                             <NavLink to="/user" isRouterLink>{profileData} Dashboard</NavLink>
                         ) : (
                             <NavLink
-                                onClick={() => localStorage.getItem("token") ? navigate("/admin") : alert("Needs Admin Login")}
+                                onClick={() => localStorage.getItem("token") ? navigate("/admin") : Swal.fire({
+                                    icon: "error",
+                                    title: " Admin Login Needed",
+                                    text: ''
+                                })}
                                 isRouterLink
 
 

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 const Grounds = () => {
     const [grounds, setGrounds] = useState([])
@@ -26,13 +27,17 @@ const Grounds = () => {
         fetchGrounds()
 
     }, [])
-        
+
     const handleBookNow = () => {
         if (localStorage.getItem("token")) {
             navigate("/bookings")
 
         } else {
-            alert("You must first login")
+            Swal.fire({
+                icon: "error",
+                title: "Cannot book without Login",
+                text: 'Please Login to Book Futsal Ground'
+            })
         }
     }
 

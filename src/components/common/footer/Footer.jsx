@@ -1,12 +1,17 @@
 import React from 'react'
 import { FaEnvelope, FaFacebookF, FaInstagram, FaMapMarkerAlt, FaPhoneAlt, FaTwitter } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 const Footer = () => {
 
 
     const handleClick = () => {
-        localStorage.getItem("token") ? <Link to="/bookings"></Link> : alert("You must first login for booking")
+        localStorage.getItem("token") ? <Link to="/bookings"></Link> : Swal.fire({
+            icon: "error",
+            title: "Cannot book without Login",
+            text: 'Please Login to Book Futsal Ground'
+        })
     }
 
 
@@ -43,7 +48,7 @@ const Footer = () => {
                     <div>
                         <h2 className="text-xl font-bold text-white mb-4">Quick Links</h2>
                         <ul className="space-y-3">
-                            <li><Link to="/" className="hover:text-yellow-400 transition">Home</Link></li>
+                            <li><Link to="#" className="hover:text-yellow-400 transition">Home</Link></li>
                             <li onClick={handleClick} className="hover:text-yellow-400 transition">Bookings</li>
                             <li><Link to="/pricing" className="hover:text-yellow-400 transition">Pricing</Link></li>
                             <li><Link to="/contact" className="hover:text-yellow-400 transition">Contact</Link></li>
@@ -67,7 +72,7 @@ const Footer = () => {
 
 
                 <div className="mt-10 flex flex-col md:flex-row items-center justify-between border-t border-gray-700 pt-6">
-                    <p className="text-sm">© {new Date().getFullYear()} FutsalBook. All rights reserved.</p>
+                    <p className="text-sm">© {new Date().getFullYear()} Anfield Futsal. All rights reserved.</p>
                     <div className="flex gap-5 mt-4 md:mt-0">
                         <Link to="https://www.facebook.com/" className="text-gray-400 hover:text-yellow-400 transition">
                             <FaFacebookF size={18} />

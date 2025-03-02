@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-
+import Swal from 'sweetalert2';
 
 const Banner = () => {
     const navigate = useNavigate()
@@ -9,7 +9,11 @@ const Banner = () => {
         if (localStorage.getItem("token")) {
             navigate("/bookings")
         } else {
-            alert("Cannot book without login")
+            Swal.fire({
+                icon: "error",
+                title: "Cannot book without Login",
+                text: 'Please Login to Book Futsal Ground'
+            })
         }
     }
 
