@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import OtpInput from 'react-otp-input';
+import Swal from 'sweetalert2';
 
 const VerifyOtp = () => {
 
@@ -33,12 +34,26 @@ const VerifyOtp = () => {
             );
 
             if (response.status === 200) {
-                alert('OTP verified successfully!');
-                navigate('/resetpassword', { state: { email } }); // Redirect to reset password page
+                Swal.fire({
+                    icon: "success",
+                    title: "OTP verified successfully",
+                    text: "You will be redirect to reset password...",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+                setTimeout(() => {
+                    navigate('/resetpassword', { state: { email } });
+
+                }, 1000);
             }
         } catch (error) {
             setError(error.response?.data?.message || 'Error verifying OTP');
-            alert(error.response?.data?.message, "Error in verifying otp")
+            Swal.fire({
+                icon: "error",
+                title: "Verify OTP Failed",
+                text: error.response?.data?.message || 'Verify OTP Unsuccessful. Please check your OTP and try again.'
+            })
         } finally {
             setIsLoading(false);
         }
@@ -76,7 +91,7 @@ const VerifyOtp = () => {
                 </form>
 
                 {error && (
-                    <p className="mt-4 text-center text-sm text-gray-600">{error}</p>
+                    <p className="mt-4 text-center text-sm text-red-600">{error}</p>
                 )}
 
 
