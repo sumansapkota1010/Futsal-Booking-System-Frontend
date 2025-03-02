@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { FaEnvelope } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -32,11 +33,25 @@ const ForgotPassword = () => {
             );
 
             if (response.status === 200) {
-                alert('OTP sent successfully to your email.');
-                navigate('/verifyotp', { state: { email } }); // Pass email to the next page
+                Swal.fire({
+                    icon: "success",
+                    title: "OTP sent successfully to your email",
+                    text: "You will be redirect to.verify otp..",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    showConfirmButton: false
+                })
+                setTimeout(() => {
+
+                    navigate('/verifyotp', { state: { email } }); // Pass email to the next page
+                }, 1000);
             }
         } catch (error) {
-            setError(error.response?.data?.message || 'Error sending OTP. Please try again.');
+            Swal.fire({
+                icon: "error",
+                title: "Error sending OTP",
+                text: error.response?.data?.message || 'Sending OTP Unsuccessful. Please  try again.'
+            })
         } finally {
             setIsLoading(false);
         }
@@ -54,7 +69,7 @@ const ForgotPassword = () => {
 
                 <form onSubmit={handleSubmit} className="mt-6">
                     <div className="relative">
-                        <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
+                        <FaEnvelope className="absolute top-[17px]  left-3 text-gray-400" />
                         <input
                             type="email"
                             placeholder="Enter your email"

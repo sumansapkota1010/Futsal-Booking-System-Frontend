@@ -3,6 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
+
+
 const ResetPassword = () => {
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
@@ -27,11 +31,24 @@ const ResetPassword = () => {
                 }
             })
             if (response.status === 200) {
-                alert("Password reset successfully")
-                navigate("/login")
+                Swal.fire({
+                    icon: "success",
+                    title: "Password reset successfull",
+                    text: "You will be redirect to login...",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    showConfirmButton: true
+                })
+                setTimeout(() => {
+                    navigate("/login")
+                }, 1000);
             }
         } catch (error) {
-            console.error(error.response?.data?.message || "Error in password reset ")
+            Swal.fire({
+                icon: "error",
+                title: "Reset password failed",
+                text: error.response?.data?.message || 'Reset Password Unsuccessful. Please try again.'
+            })
         } finally {
             setIsLoading(false)
         }
