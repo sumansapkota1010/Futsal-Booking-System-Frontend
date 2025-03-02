@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const AdminGround = () => {
     const [grounds, setGrounds] = useState([]);
@@ -22,17 +23,39 @@ const AdminGround = () => {
 
     const handleDelete = async (id) => {
         if (!id) return
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        })
+        if (result.isConfirmed) {
+            try {
+                await axios.delete(`http://localhost:3000/api/deleteground/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                })
+                setGrounds(grounds.filter(ground => ground._id !== id))
 
-        try {
-            await axios.delete(`http://localhost:3000/api/deleteground/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                }
-            })
-            setGrounds(grounds.filter(ground => ground._id !== id))
-
-        } catch (err) {
-            console.log("Error in deleting grounds")
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Deleted!',
+                    text: 'The ground has been deleted.',
+                    showConfirmButton: false,
+                    timer: 1500,
+                })
+            } catch (err) {
+                Swal.fire({
+                    icon: "error",
+                    title: 'Error',
+                    text: 'Failed to delete the ground. Please try again.'
+                })
+            }
         }
 
     }
