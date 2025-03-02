@@ -3,64 +3,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchSlots } from "../redux/slice/slots";
 import { useNavigate } from "react-router-dom";
 import { createBooking } from "../redux/slice/bookings";
+import { format } from "date-fns";
 
 const BookingPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { slots, isLoading, error } = useSelector((state) => state.slots);
-    const { loading: bookingLoading, error: bookingError } = useSelector(
-        (state) => state.bookings
-    );
+    const { loading: bookingLoading, error: bookingError } = useSelector((state) => state.bookings);
 
     const [selectedSlot, setSelectedSlot] = useState(null);
-    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
     const [selectedGround, setSelectedGround] = useState("");
 
     useEffect(() => {
         dispatch(fetchSlots());
     }, [dispatch]);
 
-    useEffect(() => {
-        const handleClickOutside = () => {
-            setSelectedSlot(null);
-        };
-
-        document.addEventListener("click", handleClickOutside);
-
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, []);
-
-    const handleSlotClick = (slot, e) => {
-        e.stopPropagation();
-        if (!slot.isBooked) {
-            setSelectedSlot(slot);
-        }
-    };
-
     const handleBooking = async (slotId) => {
-        const slot = validSlots.find((slot) => slot._id === slotId);
+        const slot = filteredSlots.find((slot) => slot._id === slotId);
         if (!slot || !slot.ground) return;
-
-        const groundId = slot.ground._id;
 
         try {
             const bookingResponse = await dispatch(
-                createBooking({ ground: groundId, slot: slotId })
+                createBooking({ ground: slot.ground._id, slot: slotId })
             ).unwrap();
 
-            console.log("Booking Response:", bookingResponse);
-
             if (bookingResponse?.data?._id) {
-                const bookingId = bookingResponse.data._id;
-                const amount = slot.price;
-
                 navigate(`/checkout`, {
-                    state: { bookingId, amount },
+                    state: { bookingId: bookingResponse.data._id, amount: slot.price },
                 });
-            } else {
-                console.error("Unexpected response structure:", bookingResponse);
             }
         } catch (error) {
             console.error("Booking failed:", error);
@@ -76,113 +47,95 @@ const BookingPage = () => {
     }
 
     if (error) {
-        return <div className="text-center mt-8 text-red-500 font-semibold">No Slot Available</div>;
+        return <div className="text-center mt-8 text-red-500 font-semibold">No Slots Available</div>;
     }
 
-    const validSlots = slots.filter(slot => slot.ground !== null);
+    // Filter slots based on selected date
+    const filteredSlots = slots.filter(
+        (slot) => format(new Date(slot.date), "yyyy-MM-dd") === selectedDate
+    );
 
-    const uniqueDates = [];
-    const uniqueGrounds = [];
-    validSlots.forEach((slot) => {
-        const date = new Date(slot.date).toLocaleDateString();
-        const groundName = slot.ground.name;
-
-        if (!uniqueDates.includes(date)) {
-            uniqueDates.push(date);
-        }
-        if (!uniqueGrounds.includes(groundName)) {
-            uniqueGrounds.push(groundName);
-        }
-    });
-
-    const filteredSlots = validSlots.filter((slot) => {
-        const slotDate = new Date(slot.date).toLocaleDateString();
-        const slotGround = slot.ground.name;
-
-        return (
-            (!selectedDate || slotDate === selectedDate) &&
-            (!selectedGround || slotGround === selectedGround)
-        );
-    });
+    // Get unique grounds available for the selected date
+    const uniqueGrounds = [...new Set(filteredSlots.map((slot) => slot.ground.name))];
 
     return (
-        <div className="max-w-2xl mx-auto p-6">
+        <div className="max-w-4xl mx-auto p-6">
+
             <div className="mb-4">
                 <label className="block text-gray-700 font-semibold">Select Date</label>
-                <select
+                <input
+                    type="date"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
                     className="w-full p-2 border rounded"
-                >
-                    <option value="">All Dates</option>
-                    {uniqueDates.map((date, index) => (
-                        <option key={index} value={date}>
-                            {date}
-                        </option>
-                    ))}
-                </select>
+                />
             </div>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 font-semibold">Select Ground</label>
-                <select
-                    value={selectedGround}
-                    onChange={(e) => setSelectedGround(e.target.value)}
-                    className="w-full p-2 border rounded"
-                >
-                    <option value="">All Grounds</option>
-                    {uniqueGrounds.map((ground, index) => (
-                        <option key={index} value={ground}>
-                            {ground}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {/* Display Available Grounds with their Slots in Table */}
+            {uniqueGrounds.length > 0 ? (
+                uniqueGrounds.map((ground) => {
+                    const groundSlots = filteredSlots.filter((slot) => slot.ground.name === ground);
 
-            <div className="p-4 bg-gray-100 rounded">
-                <h2 className="text-lg font-semibold text-gray-800 mb-3">
-                    Available Time Slots
-                </h2>
-                <div className="grid grid-cols-4 gap-2">
-                    {filteredSlots.map((slot) => (
-                        <button
-                            key={slot._id}
-                            onClick={(e) => handleSlotClick(slot, e)}
-                            className={`p-2 w-full text-center rounded-md 
-                                ${slot.isBooked ? "bg-red-300 text-red-700 cursor-not-allowed" : "bg-green-300 hover:bg-green-400"} 
-                                ${selectedSlot?._id === slot._id ? "border-2 border-blue-600" : ""}`}
-                            disabled={slot.isBooked}
-                        >
-                            {slot.startTime} - {slot.endTime}
-                        </button>
-                    ))}
-                </div>
-            </div>
-
-            {selectedSlot && (
-                <div className="mt-4 p-2 bg-blue-100 rounded text-blue-700 font-medium">
-                    Selected Slot: {selectedSlot.startTime} - {selectedSlot.endTime}
-                    <br />
-                    {selectedSlot.ground && (
-                        <>
-                            Ground: {selectedSlot.ground.name}
-                            <br />
-                        </>
-                    )}
-                    Date: {new Date(selectedSlot.date).toLocaleDateString()}
-                </div>
+                    return (
+                        <div key={ground} className="mb-6">
+                            <h2 className="text-lg font-semibold text-gray-800 mb-3">{ground}</h2>
+                            <div className="overflow-x-auto">
+                                <table className="w-full border-collapse border border-gray-300">
+                                    <thead>
+                                        <tr className="bg-gray-200">
+                                            <th className="border border-gray-300 p-2">Start Time</th>
+                                            <th className="border border-gray-300 p-2">End Time</th>
+                                            <th className="border border-gray-300 p-2">Status</th>
+                                            <th className="border border-gray-300 p-2">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {groundSlots.length > 0 ? (
+                                            groundSlots.map((slot) => (
+                                                <tr key={slot._id} className="text-center">
+                                                    <td className="border border-gray-300 p-2">{slot.startTime}</td>
+                                                    <td className="border border-gray-300 p-2">{slot.endTime}</td>
+                                                    <td
+                                                        className={`border border-gray-300 p-2 ${slot.isBooked ? "text-red-500" : "text-green-500"
+                                                            }`}
+                                                    >
+                                                        {slot.isBooked ? "Booked" : "Available"}
+                                                    </td>
+                                                    <td className="border border-gray-300 p-2">
+                                                        <button
+                                                            onClick={() => handleBooking(slot._id)}
+                                                            disabled={slot.isBooked || bookingLoading}
+                                                            className={`py-1 px-3 rounded text-white ${slot.isBooked
+                                                                ? "bg-gray-400 cursor-not-allowed"
+                                                                : "bg-blue-500 hover:bg-blue-700"
+                                                                }`}
+                                                        >
+                                                            {bookingLoading ? "Processing..." : "Book"}
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="4" className="text-center text-gray-500 p-2">
+                                                    No slots available.
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    );
+                })
+            ) : (
+                <p className="text-center text-gray-500">No available grounds for this date.</p>
             )}
 
-            <button
-                onClick={() => handleBooking(selectedSlot?._id)}
-                disabled={!selectedSlot || bookingLoading}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-3"
-            >
-                {bookingLoading ? "Processing..." : "Book Now"}
-            </button>
+
             {bookingError && <p className="text-red-500 mt-2">{bookingError}</p>}
         </div>
     );
 };
 
-export default BookingPage; 
+export default BookingPage;

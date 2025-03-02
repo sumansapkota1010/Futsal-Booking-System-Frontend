@@ -46,8 +46,8 @@ const ResetPassword = () => {
         } catch (error) {
             Swal.fire({
                 icon: "error",
-                title: "Reset password failed",
-                text: error.response?.data?.message || 'Reset Password Unsuccessful. Please try again.'
+                title: "Reset Password Failed",
+                text: error.response?.data?.message || 'Reset Password Unsuccessfull. Please  try again.'
             })
         } finally {
             setIsLoading(false)
