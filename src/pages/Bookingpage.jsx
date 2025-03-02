@@ -14,6 +14,7 @@ const BookingPage = () => {
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
     const [selectedGround, setSelectedGround] = useState("");
+    const [loadingSlotId, setLoadingSlotId] = useState(null);
 
     useEffect(() => {
         dispatch(fetchSlots());
@@ -22,6 +23,9 @@ const BookingPage = () => {
     const handleBooking = async (slotId) => {
         const slot = filteredSlots.find((slot) => slot._id === slotId);
         if (!slot || !slot.ground) return;
+
+        setLoadingSlotId(slotId);
+
 
         try {
             const bookingResponse = await dispatch(
@@ -35,6 +39,7 @@ const BookingPage = () => {
             }
         } catch (error) {
             console.error("Booking failed:", error);
+            setLoadingSlotId(null)
         }
     };
 
@@ -115,13 +120,13 @@ const BookingPage = () => {
                                                     <td className="border border-gray-300 p-2">
                                                         <button
                                                             onClick={() => handleBooking(slot._id)}
-                                                            disabled={slot.isBooked || bookingLoading}
+                                                            disabled={slot.isBooked || loadingSlotId === slot._id}
                                                             className={`py-1 px-3 rounded text-white ${slot.isBooked
                                                                 ? "bg-gray-400 cursor-not-allowed"
                                                                 : "bg-blue-500 hover:bg-blue-700"
                                                                 }`}
                                                         >
-                                                            {bookingLoading ? "Processing..." : "Book"}
+                                                            {loadingSlotId === slot._id ? "Processing..." : "Book"}
                                                         </button>
                                                     </td>
                                                 </tr>

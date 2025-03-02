@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
-import khaltiImage from '../assets/court/khalti.png'
+import khaltiImage from '../assets/court/khalti.png';
 import axios from "axios";
 
 const Checkout = () => {
@@ -13,12 +13,10 @@ const Checkout = () => {
     const { payment, loading, error } = useSelector((state) => state.bookings);
     const [paymentMethod, setPaymentMethod] = useState("khalti");
 
-    // Handle payment method change
     const handlePaymentChange = (e) => {
         setPaymentMethod(e.target.value);
     };
 
-    // Handle Khalti payment initiation
     const handleKhaltiPayment = async () => {
         try {
             const token = localStorage.getItem("token");
@@ -35,8 +33,10 @@ const Checkout = () => {
             console.log("Backend response:", response.data);
 
             if (response.data && response.data.payment_url) {
-                // Redirect the user to the Khalti payment page
                 window.location.href = response.data.payment_url;
+            } else if (response.data && response.data.success) {
+
+                navigate("/payment-success", { state: { bookingId, amount } });
             }
         } catch (err) {
             console.error("Payment initiation failed:", err);
@@ -44,13 +44,11 @@ const Checkout = () => {
         }
     };
 
-    // Handle COD (Cash on Delivery)
     const handleCOD = () => {
         alert("Your booking is confirmed. Payment will be collected on delivery.");
         navigate("/bookings");
     };
 
-    // Handle "Proceed to Payment" button click
     const handleProceedToPayment = () => {
         if (paymentMethod === "khalti") {
             handleKhaltiPayment();
@@ -71,9 +69,8 @@ const Checkout = () => {
         <div className="container mx-auto p-4">
             <h1 className="text-2xl font-bold text-center my-4">Checkout</h1>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-
                 <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h2 className="text-xl font-semibold mb-4">Booking Summary Summary</h2>
+                    <h2 className="text-xl font-semibold mb-4">Booking Summary</h2>
                     <div className="space-y-4">
                         <div className="flex justify-between">
                             <span>Booking ID:</span>
@@ -124,7 +121,6 @@ const Checkout = () => {
                         </div>
                     </form>
 
-
                     <button
                         onClick={handleProceedToPayment}
                         disabled={loading}
@@ -132,7 +128,6 @@ const Checkout = () => {
                     >
                         {loading ? "Processing..." : "Proceed to Payment"}
                     </button>
-
 
                     {error && (
                         <div className="text-red-500 mt-4 text-center">{error}</div>

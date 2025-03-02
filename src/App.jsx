@@ -5,8 +5,8 @@ import SignUpPage from "./pages/SignUpPage"
 
 import LoginPage from "./pages/LoginPage"
 import BookingPage from "./pages/Bookingpage"
-import CheckoutPage from "./pages/CheckOutPage"
-import PaymentSuccess from "./pages/PaymentSuccess"
+import CheckoutPage from "./pages/CheckoutPage"
+
 import ProtectedRoute from "./pages/ProtectedRoute"
 import AdminPanel from "./pages/Admin/AdminDashboard/AdminPanel"
 import UpdateGround from "./pages/Admin/AdminDashboard/admin-ground/UpdateGround"
@@ -53,13 +53,8 @@ function App() {
       path: "/checkout",
       element: <CheckoutPage />
     },
-    {
-      path: "/payment-success",
-      element: <PaymentSuccess />
-    },
-    {
 
-    },
+
     {
       path: "/user",
       element: (

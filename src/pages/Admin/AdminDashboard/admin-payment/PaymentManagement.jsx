@@ -31,7 +31,11 @@ const PaymentManagement = () => {
             console.log(response.data.data)
             setPayments(response.data.data)
         } catch (error) {
-            console.log("Error fetching payments:", error)
+            Swal.fire({
+                icon: "error",
+                title: "Payment Fetching Failed",
+                text: error.response?.data?.message || 'Fetching Payment Unsuccessful. Please try again.'
+            })
         } finally {
             setLoading(false)
         }
