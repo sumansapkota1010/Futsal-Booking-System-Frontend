@@ -50,13 +50,24 @@ const BookingPage = () => {
         return <div className="text-center mt-8 text-red-500 font-semibold">No Slots Available</div>;
     }
 
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+
+
     // Filter slots based on selected date
     const filteredSlots = slots.filter(
         (slot) => format(new Date(slot.date), "yyyy-MM-dd") === selectedDate
     );
 
+    // future slots
+    const futureSlots = filteredSlots.filter(slot => {
+        const slotDate = new Date(slot.date)
+        return slot.ground !== null && slotDate >= today
+    })
+
     // Get unique grounds available for the selected date
-    const uniqueGrounds = [...new Set(filteredSlots.map((slot) => slot.ground.name))];
+    const uniqueGrounds = [...new Set(futureSlots.map((slot) => slot.ground.name))];
 
     return (
         <div className="max-w-4xl mx-auto p-6">
