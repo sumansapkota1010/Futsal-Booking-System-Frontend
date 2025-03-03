@@ -6,6 +6,8 @@ import React, { useEffect, useState } from 'react'
 const PaymentManagement = () => {
     const [payments, setPayments] = useState([])
     const [loading, setLoading] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [paymentPerPage, setPaymentPerPage] = useState(5)
 
     useEffect(() => {
         fetchPayment()
@@ -41,6 +43,29 @@ const PaymentManagement = () => {
         }
     }
 
+    const lastPaymentIndex = currentPage * paymentPerPage
+    const firstPaymentIndex = lastPaymentIndex - paymentPerPage
+    const currentPayment = payments.slice(firstPaymentIndex, lastPaymentIndex)
+    const totalPayments = payments.length
+
+    const pages = []
+    for (let i = 1; i <= Math.ceil(totalPayments / paymentPerPage); i++) {
+        pages.push(i)
+    }
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(prev => prev - 1)
+        }
+    }
+    const handleNextPage = () => {
+        if (currentPage <= 1) {
+            setCurrentPage(prev => prev + 1)
+        }
+    }
+
+
+
     return (
         <div className="p-6">
             <h2 className="text-2xl font-bold mb-4">All Payments</h2>
@@ -59,7 +84,7 @@ const PaymentManagement = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {payments.map((payment) => {
+                        {currentPayment.map((payment) => {
                             const createdAt = formattedDate(payment.createdAt)
 
                             return (
@@ -80,7 +105,38 @@ const PaymentManagement = () => {
                     </tbody>
                 </table>
             )}
+            <div className="mt-4 flex justify-center item-center">
+                {
+                    <button
+                        onClick={handlePrevPage}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage == 1 ? "cursor-not-allowed" : ""}`} >
+
+                        Prev</button>
+                }
+
+
+
+                {pages.map((page, index) => {
+                    return <button disabled={page == currentPage}
+                        key={index}
+                        onClick={() => { setCurrentPage(page) }}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${page == currentPage ? "bg-red-500" : ""}`} >{page}
+
+                    </button>
+
+                })}
+
+                {
+                    <button
+                        onClick={handleNextPage}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage > 1 ? "cursor-not-allowed" : ""}`} >
+
+                        Next</button>
+                }
+            </div>
+
         </div>
+
     )
 }
 

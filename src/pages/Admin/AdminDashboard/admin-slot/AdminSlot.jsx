@@ -3,14 +3,14 @@ import axios from "axios";
 import { Pencil, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
+import { format, set } from "date-fns";
 
 const AdminSlot = () => {
     const [slots, setSlots] = useState([]);
     const navigate = useNavigate()
-
+    const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"))
     const [currentPage, setCurrentPage] = useState(1)
     const [slotPerPage, setSlotPerPage] = useState(5)
-
 
 
 
@@ -79,16 +79,10 @@ const AdminSlot = () => {
 
     }
 
-    const lastSlotIndex = currentPage * slotPerPage
-    const firstSlotIndex = lastSlotIndex - slotPerPage
-    const currentSlot = slots.slice(firstSlotIndex, lastSlotIndex)
-    const totalSlots = slots.length
 
 
-    let pages = []
-    for (let i = 1; i <= Math.ceil(totalSlots / slotPerPage); i++) {
-        pages.push(i)
-    }
+
+
 
 
     const handlePrevPage = () => {
@@ -106,18 +100,42 @@ const AdminSlot = () => {
 
     const formattedDate = (dateString) => {
         const date = new Date(dateString)
-        const slotDate = date.toLocaleDateString("en-US")
+        const slotDate = date.toISOString().slice(0, 10)
         return slotDate
     }
 
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
 
+
+    // slot filter garne based on selected date
+
+    const filteredSlots = slots.filter((slot) => format(new Date(slot.date), "yyyy-MM-dd") === selectedDate)
+
+    const lastSlotIndex = currentPage * slotPerPage
+    const firstSlotIndex = lastSlotIndex - slotPerPage
+    const currentSlot = filteredSlots.slice(firstSlotIndex, lastSlotIndex)
+    const totalSlots = filteredSlots.length
+
+    let pages = []
+    for (let i = 1; i <= Math.ceil(totalSlots / slotPerPage); i++) {
+        pages.push(i)
+    }
 
     return (
         <div className="p-6  mx-auto">
             <h1 className="text-2xl font-semibold mb-4 text-gray-800">Slot Management</h1>
 
 
-
+            <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">Select Date:</label>
+                <input
+                    type="date"
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    className="mt-1 block w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+            </div>
 
             <div className="  bg-white shadow-md rounded-md overflow-hidden">
                 <table className="w-full border-collapse">
@@ -137,7 +155,7 @@ const AdminSlot = () => {
                     </thead>
                     <tbody>
                         {
-                            slots.length === 0 ? (
+                            filteredSlots.length === 0 ? (
                                 <tr>
                                     <td colSpan="8" className="py-4 text-center text-gray-500">No slots available</td>
                                 </tr>
@@ -184,7 +202,7 @@ const AdminSlot = () => {
                 {
                     <button
                         onClick={handlePrevPage}
-                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage == 1 ? "cursor-not-allowed" : ""}`} >
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage == 1 ? "cursor-not-allowed opacity-50" : ""}`} >
 
                         Prev</button>
                 }
@@ -199,13 +217,13 @@ const AdminSlot = () => {
                     </button>
 
                 })}
-                {
-                    <button
-                        onClick={handleNextPage}
-                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage > 1 ? "cursor-not-allowed" : ""}`} >
-
-                        Next</button>
-                }
+                <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === pages.length}
+                    className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage === pages.length ? "cursor-not-allowed opacity-50" : ""}`}
+                >
+                    Next
+                </button>
 
 
 
