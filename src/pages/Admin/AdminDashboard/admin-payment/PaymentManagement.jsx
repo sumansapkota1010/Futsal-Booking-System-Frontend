@@ -8,6 +8,7 @@ const PaymentManagement = () => {
     const [loading, setLoading] = useState(false)
     const [currentPage, setCurrentPage] = useState(1)
     const [paymentPerPage, setPaymentPerPage] = useState(5)
+    const [search, setSearch] = useState("")
 
     useEffect(() => {
         fetchPayment()
@@ -43,10 +44,19 @@ const PaymentManagement = () => {
         }
     }
 
+    const filteredPayment = payments.filter((payment) => {
+        return search.toLowerCase() === ""
+            ? true
+            : payment.user?.userName?.toLowerCase().includes(search.toLowerCase())
+    })
+
+
+
+
     const lastPaymentIndex = currentPage * paymentPerPage
     const firstPaymentIndex = lastPaymentIndex - paymentPerPage
-    const currentPayment = payments.slice(firstPaymentIndex, lastPaymentIndex)
-    const totalPayments = payments.length
+    const currentPayment = filteredPayment.slice(firstPaymentIndex, lastPaymentIndex)
+    const totalPayments = filteredPayment.length
 
     const pages = []
     for (let i = 1; i <= Math.ceil(totalPayments / paymentPerPage); i++) {
@@ -69,10 +79,17 @@ const PaymentManagement = () => {
     return (
         <div className="p-6">
             <h2 className="text-2xl font-bold mb-4">All Payments</h2>
+            <input
+                type="text"
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full  p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <table className="w-full border-collapse border border-gray-300">
+                <table className=" mt-3 w-full border-collapse border border-gray-300">
                     <thead>
                         <tr className="bg-gray-200">
                             <th className="border p-2">User</th>
