@@ -113,12 +113,12 @@ const MyBooking = () => {
                                         <td className="p-3">{booking.slot?.startTime} </td>
                                         <td className="p-3">{booking.slot?.endTime} </td>
                                         <td className="p-3">{format(new Date(booking.slot?.date), "yyyy-MM-dd")}</td>
-                                        <td className="p-3">{booking.status} </td>
+                                        <td className={` p-5 ${booking.status === "confirmed" ? "text-green-500" : `${booking.status === "cancelled" ? "text-red-500 " : "text-yellow-500  "}`}`}>{booking.status} </td>
 
                                         <td className="p-3">{booking.slot?.price} </td>
                                         <td className="p-3">{booking.payment?.amount} </td>
-                                        <td className="p-3">{booking.payment?.status} </td>
-                                        <td className="p-3 flex text-left ">
+                                        <td className={` p-5 ${booking.payment?.status === "completed" ? "text-green-500" : "text-red-500"}`}>{booking.payment?.status} </td>
+                                        <td className="p-5 flex text-left ">
 
                                             <button onClick={() => handleCancel(booking._id)} className=" flex gap-1   text-red-500 hover:text-red-700">
 

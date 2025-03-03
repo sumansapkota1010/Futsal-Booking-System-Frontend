@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProfile } from '../../redux/slice/profile';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const MyProfile = () => {
     const dispatch = useDispatch();
@@ -53,12 +54,22 @@ const MyProfile = () => {
             );
 
             if (response.status === 200) {
-                alert('Profile updated successfully!');
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Profile Updated',
+                    text: 'Profile has been updated successfully.',
+                    showConfirmButton: false,
+                    timer: 1000,
+                })
                 dispatch(fetchProfile());
             }
         } catch (error) {
             console.error('Error updating profile:', error);
-            alert('Failed to update profile. Please try again.');
+            Swal.fire({
+                icon: "error",
+                title: "Profile Updation Failed",
+                text: error.response?.data?.message || 'Profile Updation Unsuccessful. Please try again.'
+            })
         }
     };
 
