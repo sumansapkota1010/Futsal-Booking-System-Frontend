@@ -7,6 +7,9 @@ const BookingManagement = () => {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [bookingPerPage, setBookingPerPage] = useState(5);
+    const [search, setSearch] = useState("")
+
+
 
     useEffect(() => {
         fetchBookings();
@@ -119,11 +122,22 @@ const BookingManagement = () => {
 
     }
 
+
+    const filteredBookings = bookings.filter((booking) => {
+        return search.toLowerCase() === ""
+            ? true
+            : booking.user?.userName?.toLowerCase().includes(search.toLowerCase());
+    });
+
+
+
+
+
     const lastBookingIndex = currentPage * bookingPerPage
     const firstBookingIndex = lastBookingIndex - bookingPerPage
 
-    const currentBooking = bookings.slice(firstBookingIndex, lastBookingIndex)
-    const totalBooking = bookings.length
+    const currentBooking = filteredBookings.slice(firstBookingIndex, lastBookingIndex)
+    const totalBooking = filteredBookings.length
 
     const pages = []
     for (let i = 1; i <= Math.ceil(totalBooking / bookingPerPage); i++) {
@@ -147,11 +161,23 @@ const BookingManagement = () => {
 
     return (
         <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">All Bookings</h2>
+            <h2 className="text-2xl font-bold mb-4  ">All Bookings</h2>
+
+            <input
+                type="text"
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full  p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <table className="w-full border-collapse border border-gray-300">
+
+
+                <table className="mt-3 w-full border-collapse border border-gray-300">
                     <thead>
                         <tr className="bg-gray-200">
                             <th className="border p-2">User</th>
@@ -171,7 +197,7 @@ const BookingManagement = () => {
                                     {booking.slot?.startTime} - {booking.slot?.endTime}
                                 </td>
                                 <td className="border p-2">
-                                    {booking.payment ? `${booking.payment.amount / 100}` : "Unpaid"}
+                                    {booking.payment ? `${booking.payment.amount}` : "Unpaid"}
                                 </td>
                                 <td className="border p-2">{booking.status}</td>
                                 <td className="flex justify-center space-x-7 border p-2">
