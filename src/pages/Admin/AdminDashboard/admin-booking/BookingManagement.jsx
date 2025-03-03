@@ -7,9 +7,7 @@ const BookingManagement = () => {
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [bookingPerPage, setBookingPerPage] = useState(5);
-    const [search, setSearch] = useState("")
-
-
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         fetchBookings();
@@ -29,14 +27,13 @@ const BookingManagement = () => {
                 icon: "error",
                 title: "Error in Fetching Bookings",
                 text: error.response?.data?.message || 'Bookings fetching Unsuccessful. Please try again.'
-            })
+            });
         } finally {
             setLoading(false);
         }
     };
 
     const handleCancelBooking = async (bookingId) => {
-
         const result = await Swal.fire({
             title: 'Are You Sure? You want to cancel?',
             text: "You won't be able to revert this!",
@@ -46,9 +43,8 @@ const BookingManagement = () => {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, cancel it!',
             cancelButtonText: 'Cancel',
-        })
+        });
         if (result.isConfirmed) {
-
             try {
                 const response = await axios.post(`http://localhost:3000/api/bookings/admin/cancel/${bookingId}`, {}, {
                     headers: {
@@ -58,33 +54,25 @@ const BookingManagement = () => {
                 Swal.fire({
                     icon: 'success',
                     title: 'Cancelled Booking',
-                    text: 'The booking has been cancel successfully.',
+                    text: 'The booking has been canceled successfully.',
                     showConfirmButton: false,
                     timer: 1000,
-                })
-
+                });
                 setTimeout(() => {
-
                     fetchBookings();
                 }, 1000);
-
             } catch (error) {
                 Swal.fire({
                     icon: "error",
                     title: "Booking cancel failed",
                     text: error.response?.data?.message || 'Booking cancel Unsuccessful. Please try again.'
-                })
+                });
             }
         }
-
-
     };
 
-
-
-
     const handleDeleteBooking = async (bookingId) => {
-        if (!bookingId) return
+        if (!bookingId) return;
         const result = await Swal.fire({
             title: 'Are You Sure? You want to delete?',
             text: "You won't be able to revert this!",
@@ -94,7 +82,7 @@ const BookingManagement = () => {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel',
-        })
+        });
         if (result.isConfirmed) {
             try {
                 const res = await axios.delete(`http://localhost:3000/api/bookings/admin/delete/${bookingId}`, {
@@ -104,24 +92,21 @@ const BookingManagement = () => {
                 });
                 Swal.fire({
                     icon: 'success',
-                    title: 'Booking deleted successfull',
+                    title: 'Booking deleted successfully',
                     text: 'The booking has been deleted successfully.',
                     showConfirmButton: false,
                     timer: 1000,
-                })
-                setBookings((bookings).filter(booking => bookingId !== booking._id))
-
+                });
+                setBookings((bookings) => bookings.filter(booking => bookingId !== booking._id));
             } catch (error) {
                 Swal.fire({
                     icon: "error",
                     title: "Booking deletion Failed",
                     text: error.response?.data?.message || 'Booking deletion Unsuccessful. Please try again.'
-                })
+                });
             }
         }
-
-    }
-
+    };
 
     const filteredBookings = bookings.filter((booking) => {
         return search.toLowerCase() === ""
@@ -129,54 +114,43 @@ const BookingManagement = () => {
             : booking.user?.userName?.toLowerCase().includes(search.toLowerCase());
     });
 
+    const lastBookingIndex = currentPage * bookingPerPage;
+    const firstBookingIndex = lastBookingIndex - bookingPerPage;
+    const currentBooking = filteredBookings.slice(firstBookingIndex, lastBookingIndex);
+    const totalBooking = filteredBookings.length;
 
-
-
-
-    const lastBookingIndex = currentPage * bookingPerPage
-    const firstBookingIndex = lastBookingIndex - bookingPerPage
-
-    const currentBooking = filteredBookings.slice(firstBookingIndex, lastBookingIndex)
-    const totalBooking = filteredBookings.length
-
-    const pages = []
+    const pages = [];
     for (let i = 1; i <= Math.ceil(totalBooking / bookingPerPage); i++) {
-        pages.push(i)
+        pages.push(i);
     }
 
     const handlePrevPage = () => {
         if (currentPage > 1) {
-            setCurrentPage(prev => prev - 1)
+            setCurrentPage(prev => prev - 1);
         }
+    };
 
-    }
     const handleNextPage = () => {
-        if (currentPage <= 1) {
-            setCurrentPage(prev => prev + 1)
+        if (currentPage < pages.length) {
+            setCurrentPage(prev => prev + 1);
         }
-
-    }
-
-
+    };
 
     return (
         <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4  ">All Bookings</h2>
+            <h2 className="text-2xl font-bold mb-4">All Bookings</h2>
 
             <input
                 type="text"
                 placeholder="Search..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full  p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-
 
             {loading ? (
                 <p>Loading...</p>
             ) : (
-
-
                 <table className="mt-3 w-full border-collapse border border-gray-300">
                     <thead>
                         <tr className="bg-gray-200">
@@ -189,6 +163,7 @@ const BookingManagement = () => {
                         </tr>
                     </thead>
                     <tbody>
+
                         {currentBooking.map((booking) => (
                             <tr key={booking._id} className="text-center">
                                 <td className="border p-2">{booking.user?.userName || "N/A"}</td>
@@ -199,7 +174,7 @@ const BookingManagement = () => {
                                 <td className="border p-2">
                                     {booking.payment ? `${booking.payment.amount}` : "Unpaid"}
                                 </td>
-                                <td className="border p-2">{booking.status}</td>
+                                <td className={`border border-black ${booking.status === "confirmed" ? "text-green-500" : `${booking.status === "cancelled" ? "text-red-500 " : "text-yellow-500  "}`}`}>{booking.status}</td>
                                 <td className="flex justify-center space-x-7 border p-2">
                                     {booking.status !== "cancelled" ? (
                                         <button
@@ -214,13 +189,11 @@ const BookingManagement = () => {
 
                                     <button
                                         onClick={() => handleDeleteBooking(booking._id)}
-                                        className="  bg-red-500 text-white px-3 py-1 rounded"
+                                        className="bg-red-500 text-white px-3 py-1 rounded"
                                     >
                                         Delete
                                     </button>
-
                                 </td>
-
                             </tr>
                         ))}
                     </tbody>
@@ -228,37 +201,34 @@ const BookingManagement = () => {
             )}
 
             <div className="mt-4 flex justify-center item-center">
-                {
+                <button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 1}
+                    className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage === 1 ? "cursor-not-allowed opacity-50" : ""}`}
+                >
+                    Prev
+                </button>
+
+                {pages.map((page, index) => (
                     <button
-                        onClick={handlePrevPage}
-                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage == 1 ? "cursor-not-allowed" : ""}`} >
-
-                        Prev</button>
-                }
-
-
-
-                {pages.map((page, index) => {
-                    return <button disabled={page == currentPage}
                         key={index}
-                        onClick={() => { setCurrentPage(page) }}
-                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${page == currentPage ? "bg-red-500" : ""}`} >{page}
-
+                        disabled={page === currentPage}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 ${page === currentPage ? "bg-red-500" : ""}`}
+                    >
+                        {page}
                     </button>
+                ))}
 
-                })}
-
-                {
-                    <button
-                        onClick={handleNextPage}
-                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage > 1 ? "cursor-not-allowed" : ""}`} >
-
-                        Next</button>
-                }
+                <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === pages.length}
+                    className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage === pages.length ? "cursor-not-allowed opacity-50" : ""}`}
+                >
+                    Next
+                </button>
             </div>
         </div>
-
-
     );
 };
 

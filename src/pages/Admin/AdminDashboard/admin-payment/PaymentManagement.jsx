@@ -110,7 +110,7 @@ const PaymentManagement = () => {
                                     <td className="border p-2">{payment.user?.userName || "N/A"}</td>
                                     <td className="border p-2">{payment.booking?.ground?.name || "N/A"}</td>
                                     <td className="border p-2"> {payment.amount}</td>
-                                    <td className="border p-2"> {payment?.status}</td>
+                                    <td className={`border p-2 ${payment.status === "completed" ? "bg-green-500" : "bg-red-500"}`}> {payment?.status}</td>
                                     <td className="border p-2"> {createdAt}
                                     </td>
                                 </tr>
