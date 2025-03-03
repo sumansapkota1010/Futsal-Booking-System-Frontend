@@ -85,13 +85,30 @@ const AdminSlot = () => {
     const totalSlots = slots.length
 
 
-
-
     let pages = []
     for (let i = 1; i <= Math.ceil(totalSlots / slotPerPage); i++) {
         pages.push(i)
     }
 
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(prev => prev - 1)
+        }
+    }
+    const handleNextPage = () => {
+        if (currentPage <= 1) {
+            setCurrentPage(prev => prev + 1)
+        }
+    }
+
+
+
+    const formattedDate = (dateString) => {
+        const date = new Date(dateString)
+        const slotDate = date.toLocaleDateString("en-US")
+        return slotDate
+    }
 
 
 
@@ -113,6 +130,8 @@ const AdminSlot = () => {
                             <th className="p-3 text-left">Price</th>
                             <th className="p-3 text-left">Status</th>
                             <th className="p-3 text-left">Booked By </th>
+                            <th className="p-3 text-left">Date</th>
+
                             <th className="p-3 text-right">Actions</th>
                         </tr>
                     </thead>
@@ -123,30 +142,35 @@ const AdminSlot = () => {
                                     <td colSpan="8" className="py-4 text-center text-gray-500">No slots available</td>
                                 </tr>
                             ) :
-                                currentSlot.map((slot, index) => (
-                                    <tr key={slot._id} className={`border-b }`}>
+                                currentSlot.map((slot, index) => {
+                                    const slotDate = formattedDate(slot.date)
+
+                                    return (
+
+                                        <tr key={slot._id} className={`border-b }`}>
 
 
-                                        <td className="p-3">{slot.ground?.name}</td>
-                                        <td className="p-3">{slot.startTime} </td>
-                                        <td className="p-3">{slot.endTime} </td>
-                                        <td className="p-3">{slot.price} </td>
+                                            <td className="p-3">{slot.ground?.name}</td>
+                                            <td className="p-3">{slot.startTime} </td>
+                                            <td className="p-3">{slot.endTime} </td>
+                                            <td className="p-3">{slot.price} </td>
 
-                                        <td className="p-3">{slot.isBooked ? "completed" : "pending"} </td>
-                                        <td className="p-3">{slot.bookedBy?.userName || "Not Booked"} </td>
+                                            <td className="p-3">{slot.isBooked ? "completed" : "pending"} </td>
+                                            <td className="p-3">{slot.bookedBy?.userName || "Not Booked"} </td>
+                                            <td className="p-3">{slotDate} </td>
+                                            <td className="p-3 text-right">
 
+                                                <button onClick={() => handleDelete(slot._id)} className="text-red-500 hover:text-red-700">
+                                                    <Trash2 size={18} />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    )
+                                }
 
+                                )
 
-
-                                        <td className="p-3 text-right">
-
-                                            <button onClick={() => handleDelete(slot._id)} className="text-red-500 hover:text-red-700">
-                                                <Trash2 size={18} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-
+                        }
 
 
 
@@ -156,14 +180,32 @@ const AdminSlot = () => {
             </div>
             <div className=" mt-4 flex justify-center item-center">
 
+
+                {
+                    <button
+                        onClick={handlePrevPage}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage == 1 ? "cursor-not-allowed" : ""}`} >
+
+                        Prev</button>
+                }
+
+
                 {pages.map((page, index) => {
                     return <button disabled={page == currentPage}
                         key={index}
                         onClick={() => { setCurrentPage(page) }}
-                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 ${page == currentPage ? "cursor-not-allowed" : ""}`} >{page}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${page == currentPage ? "bg-red-500" : ""}`} >{page}
 
                     </button>
+
                 })}
+                {
+                    <button
+                        onClick={handleNextPage}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage > 1 ? "cursor-not-allowed" : ""}`} >
+
+                        Next</button>
+                }
 
 
 
