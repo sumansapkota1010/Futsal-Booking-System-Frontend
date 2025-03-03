@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { MdCancel } from "react-icons/md";
 import { format } from "date-fns";
+import Swal from 'sweetalert2';
 
 
 const MyBooking = () => {
@@ -29,7 +30,11 @@ const MyBooking = () => {
             }
             fetchBooking()
         } catch (error) {
-            setError("Error in fetching Bookings", error)
+            Swal.fire({
+                icon: "error",
+                title: "Error in fetching bookings",
+                text: error.response?.data?.message || 'Fetching bookings Unsuccessful. Please try again.'
+            })
 
         } finally {
             setIsLoading(false)
@@ -39,11 +44,18 @@ const MyBooking = () => {
     const handleCancel = async (id) => {
         if (!id) return;
 
-        const isConfirmed = window.confirm(
-            "Are you sure you want to cancel your booking? This action cannot be undone."
-        );
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, cancel it!',
+            cancelButtonText: 'Cancel',
+        })
 
-        if (isConfirmed) {
+        if (result.isConfirmed) {
             try {
                 const response = await axios.post(
                     `http://localhost:3000/api/bookings/cancel/${id}`,
@@ -56,15 +68,26 @@ const MyBooking = () => {
                 );
 
                 if (response.status === 200) {
-                    alert("Booking cancelled successfully");
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Booking Cancelled',
+                        text: 'The booking has been cancelled successfully.',
+                        showConfirmButton: false,
+                        timer: 1000,
+                    })
                 }
             } catch (error) {
-                const errorMessage = error.response?.data?.message || "Failed to cancel booking. Please try again.";
-                setError(errorMessage);
-                alert(errorMessage);
+                Swal.fire({
+                    icon: "error",
+                    title: "Booking Cancel Failed",
+                    text: error.response?.data?.message || 'Cancel Booking Unsuccessful. Please try again.'
+                })
             }
         } else {
-            alert("Booking not cancelled");
+            Swal.fire({
+                icon: "info",
+                title: "Booking not cancelled"
+            })
         }
     };
 
