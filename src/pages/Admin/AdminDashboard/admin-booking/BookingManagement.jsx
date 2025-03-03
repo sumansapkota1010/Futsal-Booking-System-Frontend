@@ -5,6 +5,8 @@ import Swal from 'sweetalert2';
 const BookingManagement = () => {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [bookingPerPage, setBookingPerPage] = useState(5);
 
     useEffect(() => {
         fetchBookings();
@@ -73,8 +75,11 @@ const BookingManagement = () => {
         }
 
 
-
     };
+
+
+
+
     const handleDeleteBooking = async (bookingId) => {
         if (!bookingId) return
         const result = await Swal.fire({
@@ -114,6 +119,29 @@ const BookingManagement = () => {
 
     }
 
+    const lastBookingIndex = currentPage * bookingPerPage
+    const firstBookingIndex = lastBookingIndex - bookingPerPage
+
+    const currentBooking = bookings.slice(firstBookingIndex, lastBookingIndex)
+    const totalBooking = bookings.length
+
+    const pages = []
+    for (let i = 1; i <= Math.ceil(totalBooking / bookingPerPage); i++) {
+        pages.push(i)
+    }
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(prev => prev - 1)
+        }
+
+    }
+    const handleNextPage = () => {
+        if (currentPage <= 1) {
+            setCurrentPage(prev => prev + 1)
+        }
+
+    }
 
 
 
@@ -135,7 +163,7 @@ const BookingManagement = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {bookings.map((booking) => (
+                        {currentBooking.map((booking) => (
                             <tr key={booking._id} className="text-center">
                                 <td className="border p-2">{booking.user?.userName || "N/A"}</td>
                                 <td className="border p-2">{booking.ground?.name || "N/A"}</td>
@@ -172,7 +200,39 @@ const BookingManagement = () => {
                     </tbody>
                 </table>
             )}
+
+            <div className="mt-4 flex justify-center item-center">
+                {
+                    <button
+                        onClick={handlePrevPage}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage == 1 ? "cursor-not-allowed" : ""}`} >
+
+                        Prev</button>
+                }
+
+
+
+                {pages.map((page, index) => {
+                    return <button disabled={page == currentPage}
+                        key={index}
+                        onClick={() => { setCurrentPage(page) }}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${page == currentPage ? "bg-red-500" : ""}`} >{page}
+
+                    </button>
+
+                })}
+
+                {
+                    <button
+                        onClick={handleNextPage}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md  focus:outline-none focus:ring-2 focus:ring-blue-400 ${currentPage > 1 ? "cursor-not-allowed" : ""}`} >
+
+                        Next</button>
+                }
+            </div>
         </div>
+
+
     );
 };
 
