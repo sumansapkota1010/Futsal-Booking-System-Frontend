@@ -1,10 +1,11 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FaCheckCircle, FaCalendarAlt, FaMoneyBillAlt, FaMobileAlt, FaInfoCircle } from "react-icons/fa";
 
 const PaymentSuccess = () => {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
+    const navigate = useNavigate()
 
     const pidx = searchParams.get("pidx");
     const bookingId = searchParams.get("bookingId");
@@ -68,14 +69,14 @@ const PaymentSuccess = () => {
                         If you have any questions, please contact our support team.
                     </p>
                     <button
-                        onClick={() => (window.location.href = "/")}
+                        onClick={() => navigate("/")}
                         className="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
                     >
                         Return to Home
                     </button>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
 

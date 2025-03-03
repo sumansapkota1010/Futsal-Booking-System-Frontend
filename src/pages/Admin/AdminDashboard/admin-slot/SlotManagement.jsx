@@ -5,6 +5,9 @@ import CreateSlot from './CreateSlot';
 const SlotManagement = () => {
     const [activeNavBar, setActiveNavBar] = useState("slots");
 
+
+
+
     const renderContent = () => {
         switch (activeNavBar) {
             case "slots":

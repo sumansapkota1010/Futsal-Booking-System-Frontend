@@ -8,6 +8,16 @@ const AdminSlot = () => {
     const [slots, setSlots] = useState([]);
     const navigate = useNavigate()
 
+    const [currentPage, setCurrentPage] = useState(1)
+    const [slotPerPage, setSlotPerPage] = useState(5)
+
+
+
+
+
+
+
+
 
     useEffect(() => {
         const fetchSlots = async () => {
@@ -69,11 +79,21 @@ const AdminSlot = () => {
 
     }
 
+    const lastSlotIndex = currentPage * slotPerPage
+    const firstSlotIndex = lastSlotIndex - slotPerPage
+    const currentSlot = slots.slice(firstSlotIndex, lastSlotIndex)
+    const totalSlots = slots.length
 
-    const handleEdit = (id) => {
 
 
-    };
+
+    let pages = []
+    for (let i = 1; i <= Math.ceil(totalSlots / slotPerPage); i++) {
+        pages.push(i)
+    }
+
+
+
 
     return (
         <div className="p-6  mx-auto">
@@ -103,7 +123,7 @@ const AdminSlot = () => {
                                     <td colSpan="8" className="py-4 text-center text-gray-500">No slots available</td>
                                 </tr>
                             ) :
-                                slots.map((slot, index) => (
+                                currentSlot.map((slot, index) => (
                                     <tr key={slot._id} className={`border-b }`}>
 
 
@@ -132,8 +152,25 @@ const AdminSlot = () => {
 
                     </tbody>
                 </table>
+
             </div>
+            <div className=" mt-4 flex justify-center item-center">
+
+                {pages.map((page, index) => {
+                    return <button disabled={page == currentPage}
+                        key={index}
+                        onClick={() => { setCurrentPage(page) }}
+                        className={`px-4 py-2 mx-1 text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 ${page == currentPage ? "cursor-not-allowed" : ""}`} >{page}
+
+                    </button>
+                })}
+
+
+
+            </div>
+
         </div>
+
     );
 }
 
