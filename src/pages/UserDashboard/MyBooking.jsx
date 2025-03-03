@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { MdCancel } from "react-icons/md";
+import { format } from "date-fns";
 
 
 const MyBooking = () => {
@@ -111,7 +112,7 @@ const MyBooking = () => {
                                         <td className="p-3">{booking.ground?.name || "NA"}</td>
                                         <td className="p-3">{booking.slot?.startTime} </td>
                                         <td className="p-3">{booking.slot?.endTime} </td>
-                                        <td className="p-3">{booking.slot?.date} </td>
+                                        <td className="p-3">{format(new Date(booking.slot?.date), "yyyy-MM-dd")}</td>
                                         <td className="p-3">{booking.status} </td>
 
                                         <td className="p-3">{booking.slot?.price} </td>

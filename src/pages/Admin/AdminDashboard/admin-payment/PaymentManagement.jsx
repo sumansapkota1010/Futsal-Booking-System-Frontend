@@ -87,6 +87,7 @@ const PaymentManagement = () => {
                         {currentPayment.map((payment) => {
                             const createdAt = formattedDate(payment.createdAt)
 
+
                             return (
                                 <tr key={payment._id} className="text-center">
                                     <td className="border p-2">{payment.user?.userName || "N/A"}</td>

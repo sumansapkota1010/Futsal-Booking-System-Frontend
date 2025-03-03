@@ -171,7 +171,7 @@ const BookingManagement = () => {
                                     {booking.slot?.startTime} - {booking.slot?.endTime}
                                 </td>
                                 <td className="border p-2">
-                                    {booking.payment ? `${booking.payment.amount}` : "Unpaid"}
+                                    {booking.payment ? `${booking.payment.amount / 100}` : "Unpaid"}
                                 </td>
                                 <td className="border p-2">{booking.status}</td>
                                 <td className="flex justify-center space-x-7 border p-2">
