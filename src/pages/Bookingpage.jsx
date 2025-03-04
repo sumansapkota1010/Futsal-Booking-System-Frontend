@@ -68,22 +68,35 @@ const BookingPage = () => {
     // future slots
     const futureSlots = filteredSlots.filter(slot => {
         const currentDateTime = new Date();
-        const slotDate = new Date(slot.date); // 2025-03-02T00:00:00.000Z yesto form ma aauxa
+
+
+        const formattedCurrentDateTime = currentDateTime.toLocaleString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
+            hour12: true
+        });
+
+        console.log("Current Date Time:", currentDateTime);
+        console.log("Formatted Time:", formattedCurrentDateTime);
+
+        const slotDate = new Date(slot.date);
 
 
         const parseTime = (timeStr) => {
-            return new Date(`${slotDate.toISOString().split('T')[0]} ${timeStr}`); //   2025-03-02 6:00AM
+            if (!timeStr) return null;
+            return new Date(`${slotDate.toISOString().split('T')[0]} ${timeStr}`);
         };
 
         const startTime = parseTime(slot.startTime);
+
         console.log("🚀 ~ BookingPage ~ startTime:", startTime);
 
-        const endTime = parseTime(slot.endTime);
-        console.log("🚀 ~ BookingPage ~ endTime:", endTime);
-
-        return startTime > currentDateTime;
+        return startTime && startTime > currentDateTime;
     });
 
+
+    console.log(futureSlots);;
 
     // Get unique grounds available for the selected date
     const uniqueGrounds = [...new Set(futureSlots.map((slot) => slot.ground.name))];
