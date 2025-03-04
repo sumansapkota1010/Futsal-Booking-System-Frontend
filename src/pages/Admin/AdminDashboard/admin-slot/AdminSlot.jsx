@@ -173,7 +173,7 @@ const AdminSlot = () => {
                                             <td className="p-3">{slot.endTime} </td>
                                             <td className="p-3">{slot.price} </td>
 
-                                            <td className="p-3">{slot.isBooked ? "completed" : "pending"} </td>
+                                            <td className="p-3">{slot.isBooked ? "booked" : "pending"} </td>
                                             <td className="p-3">{slot.bookedBy?.userName || "Not Booked"} </td>
                                             <td className="p-3">{slotDate} </td>
                                             <td className="p-3 text-right">

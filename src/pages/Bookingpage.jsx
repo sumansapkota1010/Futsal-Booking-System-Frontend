@@ -67,9 +67,23 @@ const BookingPage = () => {
 
     // future slots
     const futureSlots = filteredSlots.filter(slot => {
-        const slotDate = new Date(slot.date)
-        return slot.ground !== null && slotDate >= today
-    })
+        const currentDateTime = new Date();
+        const slotDate = new Date(slot.date); // 2025-03-02T00:00:00.000Z yesto form ma aauxa
+
+
+        const parseTime = (timeStr) => {
+            return new Date(`${slotDate.toISOString().split('T')[0]} ${timeStr}`); //   2025-03-02 6:00AM
+        };
+
+        const startTime = parseTime(slot.startTime);
+        console.log("🚀 ~ BookingPage ~ startTime:", startTime);
+
+        const endTime = parseTime(slot.endTime);
+        console.log("🚀 ~ BookingPage ~ endTime:", endTime);
+
+        return startTime > currentDateTime;
+    });
+
 
     // Get unique grounds available for the selected date
     const uniqueGrounds = [...new Set(futureSlots.map((slot) => slot.ground.name))];
