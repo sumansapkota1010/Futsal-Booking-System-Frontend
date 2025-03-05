@@ -110,7 +110,7 @@ const BookingPage = () => {
             {/* Display Available Grounds with their Slots in Table */}
             {uniqueGrounds.length > 0 ? (
                 uniqueGrounds.map((ground) => {
-                    const groundSlots = futureSlots.filter((slot) => slot.ground.name === ground);
+                    const groundSlots = futureSlots.filter((slot) => slot.ground?.name === ground);
 
                     return (
                         <div key={ground} className="mb-6">
