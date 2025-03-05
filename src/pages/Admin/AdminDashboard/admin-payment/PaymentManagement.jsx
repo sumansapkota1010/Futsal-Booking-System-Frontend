@@ -101,6 +101,31 @@ const PaymentManagement = () => {
                         </tr>
                     </thead>
                     <tbody>
+                        {
+                            currentPayment.length === 0 ? (
+                                <tr>
+                                    <td colSpan="8" className="py-4 text-center text-gray-500">No payments available</td>
+                                </tr>
+                            ) : (
+                                currentPayment.map((payment) => {
+                                    const createdAt = formattedDate(payment.createdAt);
+
+                                    return (
+                                        <tr key={payment._id} className="text-center">
+                                            <td className="border p-2">{payment.user?.userName || "N/A"}</td>
+                                            <td className="border p-2">{payment.booking?.ground?.name || "N/A"}</td>
+                                            <td className="border p-2">{payment.amount}</td>
+                                            <td className={`border p-2 ${payment.status === "completed" ? "bg-green-500" : "bg-red-500"}`}>
+                                                {payment?.status}
+                                            </td>
+                                            <td className="border p-2">{createdAt}</td>
+                                        </tr>
+                                    );
+                                })
+                            )
+                        }
+
+
                         {currentPayment.map((payment) => {
                             const createdAt = formattedDate(payment.createdAt)
 

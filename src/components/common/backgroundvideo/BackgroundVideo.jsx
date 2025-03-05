@@ -13,7 +13,8 @@ const BackgroundVideo = () => {
                 src={videoSrc}
                 autoPlay
                 muted
-                loops
+                loop
+                preload="auto"
             />
             <div className="absolute top-0 left-0 w-full h-full bg-black opacity-40"></div>
             <div className="relative z-10 w-full h-[65%] bg-opacity-75">

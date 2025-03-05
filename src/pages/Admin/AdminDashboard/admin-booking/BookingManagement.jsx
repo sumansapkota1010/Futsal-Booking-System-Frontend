@@ -163,39 +163,47 @@ const BookingManagement = () => {
                         </tr>
                     </thead>
                     <tbody>
+                        {
+                            currentBooking.length === 0 ? (
+                                <tr>
+                                    <td colSpan="8" className="py-4 text-center text-gray-500">No Bookings available</td>
+                                </tr>
+                            ) :
+                                currentBooking.map((booking) => (
+                                    <tr key={booking._id} className="text-center">
+                                        <td className="border p-2">{booking.user?.userName || "N/A"}</td>
+                                        <td className="border p-2">{booking.ground?.name || "N/A"}</td>
+                                        <td className="border p-2">
+                                            {booking.slot?.startTime} - {booking.slot?.endTime}
+                                        </td>
+                                        <td className="border p-2">
+                                            {booking.payment ? `${booking.payment.amount}` : "Unpaid"}
+                                        </td>
+                                        <td className={`border border-black ${booking.status === "confirmed" ? "text-green-500" : `${booking.status === "cancelled" ? "text-red-500 " : "text-yellow-500  "}`}`}>{booking.status}</td>
+                                        <td className="flex justify-center space-x-7 border p-2">
+                                            {booking.status !== "cancelled" ? (
+                                                <button
+                                                    onClick={() => handleCancelBooking(booking._id)}
+                                                    className="bg-red-500 text-white px-3 py-1 rounded"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            ) : (
+                                                <span className="text-gray-500">Cancelled</span>
+                                            )}
 
-                        {currentBooking.map((booking) => (
-                            <tr key={booking._id} className="text-center">
-                                <td className="border p-2">{booking.user?.userName || "N/A"}</td>
-                                <td className="border p-2">{booking.ground?.name || "N/A"}</td>
-                                <td className="border p-2">
-                                    {booking.slot?.startTime} - {booking.slot?.endTime}
-                                </td>
-                                <td className="border p-2">
-                                    {booking.payment ? `${booking.payment.amount}` : "Unpaid"}
-                                </td>
-                                <td className={`border border-black ${booking.status === "confirmed" ? "text-green-500" : `${booking.status === "cancelled" ? "text-red-500 " : "text-yellow-500  "}`}`}>{booking.status}</td>
-                                <td className="flex justify-center space-x-7 border p-2">
-                                    {booking.status !== "cancelled" ? (
-                                        <button
-                                            onClick={() => handleCancelBooking(booking._id)}
-                                            className="bg-red-500 text-white px-3 py-1 rounded"
-                                        >
-                                            Cancel
-                                        </button>
-                                    ) : (
-                                        <span className="text-gray-500">Cancelled</span>
-                                    )}
+                                            <button
+                                                onClick={() => handleDeleteBooking(booking._id)}
+                                                className="bg-red-500 text-white px-3 py-1 rounded"
+                                            >
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))
+                        }
 
-                                    <button
-                                        onClick={() => handleDeleteBooking(booking._id)}
-                                        className="bg-red-500 text-white px-3 py-1 rounded"
-                                    >
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+
                     </tbody>
                 </table>
             )}
