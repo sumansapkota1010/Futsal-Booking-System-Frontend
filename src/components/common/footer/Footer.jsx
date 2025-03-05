@@ -36,16 +36,16 @@ const Footer = () => {
                                 <FaPhoneAlt className="text-yellow-400" /> +977-9840300084
                             </li>
                             <li className="flex items-center gap-3">
-                                <FaEnvelope className="text-yellow-400" /> sumansapkota777@gmail.com
+                                <FaEnvelope className="text-yellow-400" /> sumansapkota777 <br />@gmail.com
                             </li>
-                            <li className="flex items-center gap-3">
+                            <li className="flex items-center gap-3 pt-3">
                                 <FaMapMarkerAlt className="text-yellow-400" /> Kathmandu, Nepal
                             </li>
                         </ul>
                     </div>
 
 
-                    <div>
+                    <div className=''>
                         <h2 className="text-xl font-bold text-white mb-4">Quick Links</h2>
                         <ul className="space-y-3">
                             <li><Link to="#" className="hover:text-yellow-400 transition">Home</Link></li>
