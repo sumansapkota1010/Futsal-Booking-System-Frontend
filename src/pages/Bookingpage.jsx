@@ -61,27 +61,17 @@ const BookingPage = () => {
 
 
     // Filter slots based on selected date
-    const filteredSlots = slots.filter(
-        (slot) => format(new Date(slot.date), "yyyy-MM-dd") === selectedDate
-    );
+    const filteredSlots = slots.filter((slot) => {
+        const slotDate = new Date(slot.date);
+        slotDate.setHours(0, 0, 0, 0);
+        return slotDate >= today && format(slotDate, "yyyy-MM-dd") === selectedDate;
+    });
+
 
     // future slots
-    const futureSlots = filteredSlots.filter(slot => {
+    const futureSlots = filteredSlots.map((slot) => {
         const currentDateTime = new Date();
-
-
-        const formattedCurrentDateTime = currentDateTime.toLocaleString('en-US', {
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-            hour12: true
-        });
-
-        console.log("Current Date Time:", currentDateTime);
-        console.log("Formatted Time:", formattedCurrentDateTime);
-
         const slotDate = new Date(slot.date);
-
 
         const parseTime = (timeStr) => {
             if (!timeStr) return null;
@@ -90,11 +80,14 @@ const BookingPage = () => {
 
         const startTime = parseTime(slot.startTime);
 
-        console.log("🚀 ~ BookingPage ~ startTime:", startTime);
 
-        return startTime && startTime > currentDateTime;
+        const isPastSlot = startTime && startTime < currentDateTime;
+
+        return {
+            ...slot,
+            isPastSlot,
+        };
     });
-
 
     console.log(futureSlots);;
 
@@ -117,7 +110,7 @@ const BookingPage = () => {
             {/* Display Available Grounds with their Slots in Table */}
             {uniqueGrounds.length > 0 ? (
                 uniqueGrounds.map((ground) => {
-                    const groundSlots = filteredSlots.filter((slot) => slot.ground.name === ground);
+                    const groundSlots = futureSlots.filter((slot) => slot.ground.name === ground);
 
                     return (
                         <div key={ground} className="mb-6">
@@ -139,16 +132,15 @@ const BookingPage = () => {
                                                     <td className="border border-gray-300 p-2">{slot.startTime}</td>
                                                     <td className="border border-gray-300 p-2">{slot.endTime}</td>
                                                     <td
-                                                        className={`border border-gray-300 p-2 ${slot.isBooked ? "text-red-500" : "text-green-500"
-                                                            }`}
+                                                        className={`border border-gray-300 p-2 ${slot.isBooked ? "text-red-500" : slot.isPastSlot ? "text-red-500" : "text-green-500"} `}
                                                     >
-                                                        {slot.isBooked ? "Booked" : "Available"}
+                                                        {slot.isBooked ? "Booked" : slot.isPastSlot ? "Not Available" : "Available"}
                                                     </td>
                                                     <td className="border border-gray-300 p-2">
                                                         <button
                                                             onClick={() => handleBooking(slot._id)}
-                                                            disabled={slot.isBooked || loadingSlotId === slot._id}
-                                                            className={`py-1 px-3 rounded text-white ${slot.isBooked
+                                                            disabled={slot.isBooked || slot.isPastSlot || loadingSlotId === slot._id}
+                                                            className={`py-1 px-3 rounded text-white ${slot.isBooked || slot.isPastSlot
                                                                 ? "bg-gray-400 cursor-not-allowed"
                                                                 : "bg-blue-500 hover:bg-blue-700"
                                                                 }`}
