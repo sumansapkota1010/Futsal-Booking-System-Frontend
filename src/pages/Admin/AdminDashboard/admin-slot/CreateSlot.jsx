@@ -32,7 +32,7 @@ const CreateSlot = () => {
 
             try {
                 const response = await axios.post(
-                    "http://localhost:3000/api/createslot",
+                    "https://futsalbookingsystem.onrender.com/createslot",
                     values,
                     {
                         headers: {

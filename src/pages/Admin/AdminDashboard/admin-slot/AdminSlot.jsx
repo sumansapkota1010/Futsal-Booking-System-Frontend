@@ -54,7 +54,7 @@ const AdminSlot = () => {
         })
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:3000/api/slot/${id}`, {
+                await axios.delete(`https://futsalbookingsystem.onrender.com/api/slot/${id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
