@@ -11,9 +11,7 @@ const BookingPage = () => {
     const { slots, isLoading, error } = useSelector((state) => state.slots);
     const { loading: bookingLoading, error: bookingError } = useSelector((state) => state.bookings);
 
-    const [selectedSlot, setSelectedSlot] = useState(null);
     const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
-    const [selectedGround, setSelectedGround] = useState("");
     const [loadingSlotId, setLoadingSlotId] = useState(null);
 
     useEffect(() => {
@@ -25,7 +23,6 @@ const BookingPage = () => {
         if (!slot || !slot.ground) return;
 
         setLoadingSlotId(slotId);
-
 
         try {
             const bookingResponse = await dispatch(
@@ -39,136 +36,63 @@ const BookingPage = () => {
             }
         } catch (error) {
             console.error("Booking failed:", error);
-            setLoadingSlotId(null)
+            setLoadingSlotId(null);
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="flex justify-center items-center h-screen">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
-            </div>
-        );
-    }
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    if (error) {
-        return <div className="text-center mt-8 text-red-500 font-semibold">No Slots Available</div>;
-    }
-
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-
-
-
-    // Filter slots based on selected date
     const filteredSlots = slots.filter((slot) => {
         const slotDate = new Date(slot.date);
         slotDate.setHours(0, 0, 0, 0);
         return slotDate >= today && format(slotDate, "yyyy-MM-dd") === selectedDate;
     });
 
-
-    // future slots
-    const futureSlots = filteredSlots.map((slot) => {
-        const currentDateTime = new Date();
-        const slotDate = new Date(slot.date);
-
-        const parseTime = (timeStr) => {
-            if (!timeStr) return null;
-            return new Date(`${slotDate.toISOString().split('T')[0]} ${timeStr}`);
-        };
-
-        const startTime = parseTime(slot.startTime);
-
-
-        const isPastSlot = startTime && startTime < currentDateTime;
-
-        return {
-            ...slot,
-            isPastSlot,
-        };
-    });
-
-    console.log(futureSlots);;
-
-    // Get unique grounds available for the selected date
-    const uniqueGrounds = [...new Set(futureSlots.map((slot) => slot.ground.name))];
-
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="max-w-5xl mx-auto p-6 bg-gray-100 min-h-screen">
+            <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Book Your Futsal Slot</h1>
 
-            <div className="mb-4">
-                <label className="block text-gray-700 font-semibold">Select Date</label>
+            <div className="mb-6">
+                <label className="block text-gray-700 font-semibold mb-2">Select Date</label>
                 <input
                     type="date"
                     value={selectedDate}
                     onChange={(e) => setSelectedDate(e.target.value)}
-                    className="w-full p-2 border rounded"
+                    className="w-full p-2 border rounded shadow-md"
                 />
             </div>
 
-            {/* Display Available Grounds with their Slots in Table */}
-            {uniqueGrounds.length > 0 ? (
-                uniqueGrounds.map((ground) => {
-                    const groundSlots = futureSlots.filter((slot) => slot.ground?.name === ground);
-
-                    return (
-                        <div key={ground} className="mb-6">
-                            <h2 className="text-lg font-semibold text-gray-800 mb-3">{ground}</h2>
-                            <div className="overflow-x-auto">
-                                <table className="w-full border-collapse border border-gray-300">
-                                    <thead>
-                                        <tr className="bg-gray-200">
-                                            <th className="border border-gray-300 p-2">Start Time</th>
-                                            <th className="border border-gray-300 p-2">End Time</th>
-                                            <th className="border border-gray-300 p-2">Status</th>
-                                            <th className="border border-gray-300 p-2">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {groundSlots.length > 0 ? (
-                                            groundSlots.map((slot) => (
-                                                <tr key={slot._id} className="text-center">
-                                                    <td className="border border-gray-300 p-2">{slot.startTime}</td>
-                                                    <td className="border border-gray-300 p-2">{slot.endTime}</td>
-                                                    <td
-                                                        className={`border border-gray-300 p-2 ${slot.isBooked ? "text-red-500" : slot.isPastSlot ? "text-red-500" : "text-green-500"} `}
-                                                    >
-                                                        {slot.isBooked ? "Booked" : slot.isPastSlot ? "Not Available" : "Available"}
-                                                    </td>
-                                                    <td className="border border-gray-300 p-2">
-                                                        <button
-                                                            onClick={() => handleBooking(slot._id)}
-                                                            disabled={slot.isBooked || slot.isPastSlot || loadingSlotId === slot._id}
-                                                            className={`py-1 px-3 rounded text-white ${slot.isBooked || slot.isPastSlot
-                                                                ? "bg-gray-400 cursor-not-allowed"
-                                                                : "bg-blue-500 hover:bg-blue-700"
-                                                                }`}
-                                                        >
-                                                            {loadingSlotId === slot._id ? "Processing..." : "Book"}
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan="4" className="text-center text-gray-500 p-2">
-                                                    No slots available.
-                                                </td>
-                                            </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
+            {isLoading ? (
+                <div className="flex justify-center items-center h-32">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+                </div>
+            ) : error ? (
+                <p className="text-center text-red-500 font-semibold">No Slots Available</p>
+            ) : filteredSlots.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {filteredSlots.map((slot) => (
+                        <div key={slot._id} className="p-4 bg-white shadow-lg rounded-xl text-center">
+                            <h2 className="text-lg font-bold text-gray-800">{slot.ground.name}</h2>
+                            <p className="text-gray-600">{slot.startTime} - {slot.endTime}</p>
+                            <p className={`mt-2 font-semibold ${slot.isBooked ? "text-red-500" : "text-green-500"}`}>
+                                {slot.isBooked ? "Booked" : "Available"}
+                            </p>
+                            <button
+                                onClick={() => handleBooking(slot._id)}
+                                disabled={slot.isBooked || loadingSlotId === slot._id}
+                                className={`mt-4 w-full py-2 rounded-lg text-white font-semibold transition-all ${slot.isBooked ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 hover:bg-blue-700"}`}
+                            >
+                                {loadingSlotId === slot._id ? "Processing..." : "Book Now"}
+                            </button>
                         </div>
-                    );
-                })
+                    ))}
+                </div>
             ) : (
-                <p className="text-center text-gray-500">No available grounds for this date.</p>
+                <p className="text-center text-gray-500">No available slots for this date.</p>
             )}
 
-
-            {bookingError && <p className="text-red-500 mt-2">{bookingError}</p>}
+            {bookingError && <p className="text-red-500 mt-2 text-center">{bookingError}</p>}
         </div>
     );
 };
