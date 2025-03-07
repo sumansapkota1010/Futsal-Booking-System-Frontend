@@ -21,7 +21,7 @@ const Checkout = () => {
         try {
             const token = localStorage.getItem("token");
             const response = await axios.post(
-                `http://localhost:3000/api/payment/${bookingId}`,
+                `https://futsalbookingsystem.onrender.com/${bookingId}`,
                 { amount },
                 {
                     headers: {

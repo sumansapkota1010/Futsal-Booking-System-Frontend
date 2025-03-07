@@ -40,7 +40,7 @@ const MyProfile = () => {
 
         try {
             const response = await axios.patch(
-                'http://localhost:3000/api/profile',
+                'https://futsalbookingsystem.onrender.com/api/profile',
                 {
                     userName: user.username,
                     userEmail: user.email,

@@ -12,7 +12,7 @@ const AdminGround = () => {
     useEffect(() => {
         const fetchGrounds = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/getground");
+                const response = await axios.get("https://futsalbookingsystem.onrender.com/api/getground");
                 setGrounds(response.data.data);
             } catch (error) {
                 console.error("Error fetching grounds:", error);
@@ -35,7 +35,7 @@ const AdminGround = () => {
         })
         if (result.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:3000/api/deleteground/${id}`, {
+                await axios.delete(`https://futsalbookingsystem.onrender.com/api/deleteground/${id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }

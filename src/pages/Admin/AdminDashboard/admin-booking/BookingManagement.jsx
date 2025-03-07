@@ -16,7 +16,7 @@ const BookingManagement = () => {
     const fetchBookings = async () => {
         try {
             setLoading(true);
-            const res = await axios.get("http://localhost:3000/api/bookings/all", {
+            const res = await axios.get("https://futsalbookingsystem.onrender.com/api/bookings/all", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }
@@ -46,7 +46,7 @@ const BookingManagement = () => {
         });
         if (result.isConfirmed) {
             try {
-                const response = await axios.post(`http://localhost:3000/api/bookings/admin/cancel/${bookingId}`, {}, {
+                const response = await axios.post(`https://futsalbookingsystem.onrender.com/api/bookings/admin/cancel/${bookingId}`, {}, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -85,7 +85,7 @@ const BookingManagement = () => {
         });
         if (result.isConfirmed) {
             try {
-                const res = await axios.delete(`http://localhost:3000/api/bookings/admin/delete/${bookingId}`, {
+                const res = await axios.delete(`https://futsalbookingsystem.onrender.com/api/bookings/admin/delete/${bookingId}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }

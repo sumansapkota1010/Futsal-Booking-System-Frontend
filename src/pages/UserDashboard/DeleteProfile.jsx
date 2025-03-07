@@ -12,7 +12,7 @@ const DeleteProfile = () => {
         try {
             if (confirmDelete === "DELETE") {
 
-                const response = await axios.delete("http://localhost:3000/api/profile", {
+                const response = await axios.delete("https://futsalbookingsystem.onrender.com/api/profile", {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }

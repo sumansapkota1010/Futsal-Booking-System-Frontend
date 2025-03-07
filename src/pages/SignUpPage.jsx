@@ -22,7 +22,7 @@ const SignUpPage = () => {
 
         onSubmit: async (values, { resetForm, setSubmitting }) => {
             try {
-                const response = await axios.post("http://localhost:3000/api/register", values);
+                const response = await axios.post("https://futsalbookingsystem.onrender.com/api/register", values);
                 console.log("Response from backend:", response.data.data);
 
                 if (response.status === 200) {

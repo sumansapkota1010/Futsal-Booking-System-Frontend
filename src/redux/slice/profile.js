@@ -5,11 +5,14 @@ export const fetchProfile = createAsyncThunk(
   "fetchProfile",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("http://localhost:3000/api/profile", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.get(
+        "https://futsalbookingsystem.onrender.com/api/profile",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       return response.data.data;
     } catch (error) {
       return rejectWithValue(

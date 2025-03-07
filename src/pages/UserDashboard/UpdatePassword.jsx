@@ -14,7 +14,7 @@ const UpdatePassword = () => {
         e.preventDefault()
         setIsLoading(true)
         try {
-            const response = await axios.patch("http://localhost:3000/api/changepassword", { oldPassword, newPassword, confirmPassword }, {
+            const response = await axios.patch("https://futsalbookingsystem.onrender.com/api/changepassword", { oldPassword, newPassword, confirmPassword }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }

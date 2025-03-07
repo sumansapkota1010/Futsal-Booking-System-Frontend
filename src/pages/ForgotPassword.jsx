@@ -23,7 +23,7 @@ const ForgotPassword = () => {
 
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/forgetpassword',
+                'https://futsalbookingsystem.onrender.com/api/forgetpassword',
                 { email },
                 {
                     headers: {

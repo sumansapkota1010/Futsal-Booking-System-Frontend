@@ -24,7 +24,7 @@ const VerifyOtp = () => {
         console.log(email)
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/verifyotp',
+                'https://futsalbookingsystem.onrender.com/api/verifyotp',
                 { email, otp },
                 {
                     headers: {
