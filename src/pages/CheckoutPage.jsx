@@ -10,16 +10,29 @@ const Checkout = () => {
     const location = useLocation();
     const { bookingId, amount } = location.state || {};
 
-    const { payment, loading, error } = useSelector((state) => state.bookings);
     const [paymentMethod, setPaymentMethod] = useState("khalti");
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const handlePaymentChange = (e) => {
         setPaymentMethod(e.target.value);
     };
 
     const handleKhaltiPayment = async () => {
+        setLoading(true);
+        setError(null);
         try {
             const token = localStorage.getItem("token");
+            if (!token) {
+                setError("No token found. User is not authenticated.");
+                setLoading(false);
+                return;
+            }
+
+            console.log("Sending request to:", `https://futsalbookingsystem.onrender.com/api/payment/${bookingId}`);
+            console.log("Headers:", { Authorization: `Bearer ${token}` });
+            console.log("Body:", { amount });
+
             const response = await axios.post(
                 `https://futsalbookingsystem.onrender.com/api/payment/${bookingId}`,
                 { amount },
@@ -31,14 +44,25 @@ const Checkout = () => {
             );
 
             console.log("Backend response:", response.data);
+
             if (response.data && response.data.payment_url) {
                 window.location.href = response.data.payment_url;
             } else if (response.data && response.data.success) {
                 navigate(`/payment-success?bookingId=${bookingId}&amount=${amount}`);
+            } else {
+                setError("Unexpected response from backend.");
             }
         } catch (err) {
             console.error("Payment initiation failed:", err);
             console.error("Error response:", err.response?.data);
+
+            if (err.response) {
+                setError(`Payment failed: ${err.response.data.message || "Unknown error"}`);
+            } else {
+                setError("Payment failed. Please check your connection and try again.");
+            }
+        } finally {
+            setLoading(false);
         }
     };
 
