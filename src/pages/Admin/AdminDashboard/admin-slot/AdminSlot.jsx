@@ -22,7 +22,7 @@ const AdminSlot = () => {
     useEffect(() => {
         const fetchSlots = async () => {
             try {
-                const response = await axios.get("http://localhost:3000/api/slot/all", {
+                const response = await axios.get("https://futsalbookingsystem.onrender.com/api/slot/all", {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
