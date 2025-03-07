@@ -5,6 +5,13 @@ import { groundSchema } from "../../../../schemas";
 import { useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2';
 
+
+const token = localStorage.getItem("token")
+console.log("🚀 ~ token:", token)
+
+
+
+
 const initialValues = {
     name: "",
     location: "",
@@ -47,6 +54,7 @@ const CreateGround = () => {
             if (values.groundImage) {
                 formData.append("groundImage", values.groundImage);
             }
+
 
             try {
                 const response = await axios.post(
