@@ -1,71 +1,65 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import Layout from "./components/common/Layout"
-import HomePage from "./pages/HomePage"
-import SignUpPage from "./pages/SignUpPage"
-
-import LoginPage from "./pages/LoginPage"
-import BookingPage from "./pages/Bookingpage"
-import CheckoutPage from "./pages/CheckoutPage"
-
-import ProtectedRoute from "./pages/ProtectedRoute"
-import AdminPanel from "./pages/Admin/AdminDashboard/AdminPanel"
-import UpdateGround from "./pages/Admin/AdminDashboard/admin-ground/UpdateGround"
-import ForgotPassword from "./pages/ForgotPassword"
-import UserPanel from "./pages/UserDashboard/UserPanel"
-import VerifyOtp from "./pages/VerifyOtp"
-import ResetPassword from "./pages/ResetPassword"
-import PaymentSuccess from "./pages/PaymentSuccess"
-
-
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "./components/common/Layout";
+import HomePage from "./pages/HomePage";
+import SignUpPage from "./pages/SignUpPage";
+import LoginPage from "./pages/LoginPage";
+import BookingPage from "./pages/Bookingpage";
+import CheckoutPage from "./pages/CheckoutPage";
+import ProtectedRoute from "./pages/ProtectedRoute";
+import AdminPanel from "./pages/Admin/AdminDashboard/AdminPanel";
+import UpdateGround from "./pages/Admin/AdminDashboard/admin-ground/UpdateGround";
+import ForgotPassword from "./pages/ForgotPassword";
+import UserPanel from "./pages/UserDashboard/UserPanel";
+import VerifyOtp from "./pages/VerifyOtp";
+import ResetPassword from "./pages/ResetPassword";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
       element: <Layout />,
-      children: [{ path: "", element: <HomePage /> }]
+      children: [{ path: "", element: <HomePage /> }],
     },
     {
       path: "/register",
-      element: <SignUpPage />
+      element: <SignUpPage />,
     },
     {
       path: "/login",
-      element: <LoginPage />
+      element: <LoginPage />,
     },
     {
       path: "/forgotpassword",
-      element: <ForgotPassword />
+      element: <ForgotPassword />,
     },
     {
       path: "/verifyotp",
-      element: <VerifyOtp />
+      element: <VerifyOtp />,
     },
     {
       path: "/resetpassword",
-      element: <ResetPassword />
+      element: <ResetPassword />,
     },
     {
       path: "/bookings",
-      element: <BookingPage />
+      element: <BookingPage />,
     },
     {
       path: "/checkout",
-      element: <CheckoutPage />
+      element: <CheckoutPage />,
     },
     {
       path: "/payment-success",
-      element: <PaymentSuccess />
+      element: <PaymentSuccess />,
     },
-
     {
       path: "/user",
       element: (
         <ProtectedRoute requiredRole="player">
           <UserPanel />
         </ProtectedRoute>
-      )
+      ),
     },
     {
       path: "/admin",
@@ -81,16 +75,15 @@ function App() {
         <ProtectedRoute requiredRole="admin">
           <UpdateGround />
         </ProtectedRoute>
-      )
-    }
-  ])
+      ),
+    },
+  ]);
 
   return (
     <>
       <RouterProvider router={router} />
-
     </>
-  )
+  );
 }
 
-export default App
+export default App;
