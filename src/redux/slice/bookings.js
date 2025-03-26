@@ -7,7 +7,7 @@ export const createBooking = createAsyncThunk(
   async ({ ground, slot }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "https://futsalbookingsystem.onrender.com/api/createbooking",
+        "http://localhost:3000/api/createbooking",
         { ground, slot },
         {
           headers: {
@@ -31,7 +31,7 @@ export const initiateKhaltiPayment = createAsyncThunk(
   async ({ bookingId, amount }, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        `https://futsalbookingsystem.onrender.com/api/payment/${bookingId}`,
+        `http://localhost:3000/api/payment/${bookingId}`,
         { bookingId, amount },
         {
           headers: {

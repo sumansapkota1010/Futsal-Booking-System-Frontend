@@ -2,12 +2,16 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchProfile } from '../redux/slice/profile'
 import accessDenied from '../assets/court/access-denied-stamp-png.png'
+import { useNavigate } from 'react-router-dom'
+
 
 const ProtectedRoute = ({ children, requiredRole }) => {
 
     const dispatch = useDispatch()
     const { profile, isLoading, error } = useSelector((state) => state.profile)
     console.log("🚀 ~ ProtectedRoute ~ profile:", profile.role)
+
+    const navigate = useNavigate()
 
 
 
@@ -17,6 +21,12 @@ const ProtectedRoute = ({ children, requiredRole }) => {
 
 
     }, [dispatch])
+
+    useEffect(() => {
+        if (error) {
+            navigate("/login"); // Redirect to login page
+        }
+    }, [error, navigate]);
 
     if (isLoading) {
         return <div>Loading...</div>

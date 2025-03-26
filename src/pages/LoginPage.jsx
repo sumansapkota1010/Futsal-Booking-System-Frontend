@@ -21,14 +21,14 @@ const LoginPage = () => {
         validationSchema: loginSchema,
         onSubmit: async (values, { setSubmitting, resetForm }) => {
             try {
-                const response = await axios.post("https://futsalbookingsystem.onrender.com/api/login", values)
+                const response = await axios.post("http://localhost:3000/api/login", values)
                 console.log("🚀 ~ onSubmit: ~ response:", response.data.token)
                 if (response.status === 200) {
                     const { token } = response.data
                     localStorage.setItem("token", token)
 
 
-                    const profileResponse = await axios.get("https://futsalbookingsystem.onrender.com/api/profile", {
+                    const profileResponse = await axios.get("http://localhost:3000/api/profile", {
                         headers: { Authorization: `Bearer ${token}` }
                     })
                     if (profileResponse.status === 200) {

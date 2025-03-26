@@ -17,7 +17,7 @@ const MyBooking = () => {
         try {
             setIsLoading(true)
             const fetchBooking = async () => {
-                const response = await axios.get("https://futsalbookingsystem.onrender.com/bookings/my-bookings/",
+                const response = await axios.get("http://localhost:3000/api/bookings/my-bookings/",
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -58,7 +58,7 @@ const MyBooking = () => {
         if (result.isConfirmed) {
             try {
                 const response = await axios.post(
-                    `https://futsalbookingsystem.onrender.com/api/bookings/cancel/${id}`,
+                    `http://localhost:3000/api/bookings/cancel/${id}`,
                     {},
                     {
                         headers: {

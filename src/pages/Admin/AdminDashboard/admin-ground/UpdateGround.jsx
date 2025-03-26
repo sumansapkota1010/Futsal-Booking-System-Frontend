@@ -23,7 +23,7 @@ const UpdateGround = () => {
     useEffect(() => {
         const fetchGround = async () => {
             try {
-                const response = await axios.get(`https://futsalbookingsystem.onrender.com/api/singleground/${id}`, {
+                const response = await axios.get(`http://localhost:3000/api/singleground/${id}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`
                     }
@@ -81,7 +81,7 @@ const UpdateGround = () => {
 
             try {
                 const response = await axios.put(
-                    `https://futsalbookingsystem.onrender.com/api/updateground/${id}`,
+                    `http://localhost:3000/api/updateground/${id}`,
                     formData,
                     {
                         headers: {

@@ -29,12 +29,12 @@ const Checkout = () => {
                 return;
             }
 
-            console.log("Sending request to:", `https://futsalbookingsystem.onrender.com/api/payment/${bookingId}`);
+            console.log("Sending request to:", `http://localhost:3000/api/payment/${bookingId}`);
             console.log("Headers:", { Authorization: `Bearer ${token}` });
             console.log("Body:", { amount });
 
             const response = await axios.post(
-                `https://futsalbookingsystem.onrender.com/api/payment/${bookingId}`,
+                `http://localhost:3000/api/payment/${bookingId}`,
                 { amount },
                 {
                     headers: {

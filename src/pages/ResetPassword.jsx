@@ -25,7 +25,7 @@ const ResetPassword = () => {
         setIsLoading(true)
         try {
 
-            const response = await axios.post("https://futsalbookingsystem.onrender.com/api/resetpassword", { email, newPassword, confirmPassword }, {
+            const response = await axios.post("http://localhost:3000/api/resetpassword", { email, newPassword, confirmPassword }, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }

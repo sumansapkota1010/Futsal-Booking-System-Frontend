@@ -15,7 +15,7 @@ const Grounds = () => {
 
         const fetchGrounds = async () => {
             try {
-                const response = await axios.get("https://futsalbookingsystem.onrender.com/api/getground")
+                const response = await axios.get("http://localhost:3000/api/getground")
                 setGrounds(response.data.data)
                 console.log(response.data.data[0].image)
             } catch (err) {

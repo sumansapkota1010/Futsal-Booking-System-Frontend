@@ -13,7 +13,7 @@ const ContactManagement = () => {
     const fetchContact = async () => {
         try {
             setLoading(true)
-            const response = await axios.get("https://futsalbookingsystem.onrender.com/api/contact", {
+            const response = await axios.get("http://localhost:3000/api/contact", {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`
                 }

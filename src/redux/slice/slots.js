@@ -2,14 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 export const fetchSlots = createAsyncThunk("slots/fetchSlots", async () => {
-  const response = await axios.get(
-    "https://futsalbookingsystem.onrender.com/api/slot/all",
-    {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }
-  );
+  const response = await axios.get("http://localhost:3000/api/slot/all", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
   console.log(response.data.data);
   return response.data.data;
 });
