@@ -157,6 +157,7 @@ const BookingPage = () => {
                                                         "Book Now"
                                                     )}
                                                 </button>
+
                                             </div>
                                         ))}
                                     </div>
